@@ -14,7 +14,7 @@ public class MainMenu extends ActionBarActivity {
         setContentView(R.layout.activity_main_menu);
     }
 
-    // Commiting Test
+    // Tom Commiting Test
     // Matt commit test
 
     @Override
