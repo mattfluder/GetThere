@@ -1,9 +1,12 @@
 package com.capstone.transit.trans_it;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class MainMenu extends ActionBarActivity {
@@ -12,10 +15,21 @@ public class MainMenu extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-    }
 
-    // Tom Commiting Test
-    // Matt commit test
+     // Setting up button references
+
+        Button Map = (Button) findViewById(R.id.MapB);
+
+        Map.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.MAPACTIVITY"));
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
