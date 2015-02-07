@@ -5,7 +5,78 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainMenu">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <TextView android:text="Main Menu" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trip Planner"
+        android:id="@+id/TripPlannerB"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/StopListB"
+        android:layout_toStartOf="@+id/StopListB" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop List"
+        android:id="@+id/StopListB"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Route List"
+        android:id="@+id/RouteListB"
+        android:layout_alignBottom="@+id/StopListB"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/StopListB"
+        android:layout_toEndOf="@+id/StopListB" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Map"
+        android:id="@+id/MapB"
+        android:layout_marginTop="53dp"
+        android:layout_below="@+id/TripPlannerB"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:id="@+id/SettingsB"
+        android:layout_alignBottom="@+id/MapB"
+        android:layout_toLeftOf="@+id/RouteListB"
+        android:layout_toStartOf="@+id/RouteListB" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Help"
+        android:id="@+id/HelpB"
+        android:layout_alignBottom="@+id/SettingsB"
+        android:layout_alignRight="@+id/RouteListB"
+        android:layout_alignEnd="@+id/RouteListB" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorites"
+        android:id="@+id/FavoritesB"
+        android:layout_below="@+id/SettingsB"
+        android:layout_alignLeft="@+id/SettingsB"
+        android:layout_alignStart="@+id/SettingsB"
+        android:layout_marginTop="42dp" />
 
 </RelativeLayout>
