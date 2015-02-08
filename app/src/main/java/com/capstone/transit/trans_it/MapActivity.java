@@ -29,6 +29,9 @@ public class MapActivity extends FragmentActivity {
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
         testCameraChange();
+
+        //Map Activity Done
+
     }
 
     @Override
