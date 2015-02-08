@@ -7,15 +7,17 @@ import android.os.Bundle;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Vector;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapActivity extends FragmentActivity {
 
@@ -26,6 +28,7 @@ public class MapActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
+        testCameraChange();
     }
 
     @Override
@@ -34,21 +37,6 @@ public class MapActivity extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p/>
-     * If it isn't installed {@link SupportMapFragment} (and
-     * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
-     * install/update the Google Play services APK on their device.
-     * <p/>
-     * A user can return to this FragmentActivity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
-     * have been completely destroyed during this process (it is likely that it would only be
-     * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
-     * method in {@link #onResume()} to guarantee that it will be called.
-     */
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
@@ -61,13 +49,6 @@ public class MapActivity extends FragmentActivity {
             }
         }
     }
-
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
 
     public ArrayList<String> createLatArrayList(){
         // LatV = lat values
@@ -173,17 +154,20 @@ public class MapActivity extends FragmentActivity {
 
     }
 
-    private void setUpMap() {
+    public List<Marker> createMarkerList(){
 
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(43.2500,-79.919501), 13.0f) );
-
-        // Creating ArrayLists of Strings
+        // Storing the latitude / longitude / names by calling their respective functions
 
         ArrayList<String> LatValues = createLatArrayList();
         ArrayList<String> LonValues = createLonArrayList();
         ArrayList<String> StopNames = createStopNameArrayList();
+
+        // Creating a marker list to store the markers
+
+        List<Marker> markers = new ArrayList<Marker>();
+
         String StopName;
-        int size = LatValues.size();
+        final int size = LatValues.size();
         double LatV,LonV;
         int i = 0;
 
@@ -196,9 +180,47 @@ public class MapActivity extends FragmentActivity {
             StopName = StopNames.get(i);
 
             // Set a marker for each iteration
+            // Add each marker to the list "Markers"
 
-            mMap.addMarker(new MarkerOptions().position(new LatLng(LatV, LonV)).title(StopName));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(LatV, LonV)).title(StopName));
+            markers.add(marker);
             i++;
         }
+
+        return markers;
     }
+
+    private void setUpMap() {
+
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(43.2500,-79.919501), 13.0f) );
+
+    }
+
+    private void testCameraChange(){
+
+        // Rather than completely deleting the markers depending on zoom level, we just change the visibility
+        // property to true or false depending on the situation
+
+        final List<Marker> markers = createMarkerList(); // Returns the markers list as well as sets the markers on the map
+        final int size = markers.size();  // retrieves length to use for the for loop
+
+        mMap.setOnCameraChangeListener( new GoogleMap.OnCameraChangeListener() {
+
+            @Override
+            public void onCameraChange( CameraPosition cameraPosition ) {
+                if(mMap.getCameraPosition().zoom >= 16){   // If zoomed in sufficiently, sets the visibility to true
+                    for(int a=0;a<size;a++){
+                        markers.get(a).setVisible(true);
+                    }
+                }
+                else{
+                    for(int a=0;a<size;a++){
+                        markers.get(a).setVisible(false);  // If not zoomed in sufficiently, sets the visibility to false
+                    }
+                }
+            }
+        });
+    }
+
+
 }
