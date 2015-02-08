@@ -1,5 +1,6 @@
 package com.capstone.transit.trans_it;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class MapActivity extends FragmentActivity {
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
         testCameraChange();
+        infoWindowClick();
 
         //Map Activity Done
 
@@ -146,14 +148,40 @@ public class MapActivity extends FragmentActivity {
                 }
                 count++;
             }
-
             br.close();
         }
         catch (IOException e1){
-
         }
-
         return NameV;
+
+    }
+
+    public ArrayList<String> createStopIDArrayList(){
+        AssetManager mngr;
+        String line = null;
+        ArrayList<String> StopID = new ArrayList<String>();
+        int count=0;
+        boolean skillcheck = false;
+
+        try{
+            mngr = getAssets();
+            InputStream is = mngr.open("stops.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            while((line=br.readLine()) != null){  // Read until last line in .txt file
+                if(count>0){
+                    line = line.toUpperCase();
+                    String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+                    StopID.add(ArrayValues[4]);  // Access first index (latitude) and add to ArrayList
+                }
+                count++;
+            }
+            br.close();
+        }
+        catch (IOException e1){
+        }
+        return StopID;
 
     }
 
@@ -164,12 +192,14 @@ public class MapActivity extends FragmentActivity {
         ArrayList<String> LatValues = createLatArrayList();
         ArrayList<String> LonValues = createLonArrayList();
         ArrayList<String> StopNames = createStopNameArrayList();
+        ArrayList<String> StopIDs = createStopIDArrayList();
+
 
         // Creating a marker list to store the markers
 
         List<Marker> markers = new ArrayList<Marker>();
 
-        String StopName;
+        String StopName,StopID;
         final int size = LatValues.size();
         double LatV,LonV;
         int i = 0;
@@ -181,11 +211,13 @@ public class MapActivity extends FragmentActivity {
             LatV = Double.parseDouble(LatValues.get(i));
             LonV = Double.parseDouble(LonValues.get(i));
             StopName = StopNames.get(i);
+            StopID = StopIDs.get(i);
 
             // Set a marker for each iteration
             // Add each marker to the list "Markers"
 
             Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(LatV, LonV)).title(StopName));
+            marker.setSnippet(StopID);
             markers.add(marker);
             i++;
         }
@@ -225,5 +257,24 @@ public class MapActivity extends FragmentActivity {
         });
     }
 
+    private void infoWindowClick(){
 
+        final ArrayList<String> LatValues = createLatArrayList();
+        final ArrayList<String> LonValues = createLonArrayList();
+        final ArrayList<String> StopIDs = createStopIDArrayList();
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+
+                Intent intent = new Intent(getBaseContext(), infoWindowClickActivity.class);
+                intent.putExtra("STOP_NAME", marker.getTitle());
+                intent.putExtra("STOP_ID", marker.getSnippet());
+                startActivity(intent);
+            }
+        });
+
+    }
 }
