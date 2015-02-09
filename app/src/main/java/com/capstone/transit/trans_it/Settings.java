@@ -72,7 +72,7 @@ public class Settings extends ActionBarActivity {
               //  startActivity(intent);
             }
         });
-
+        //thing
         realtime.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
