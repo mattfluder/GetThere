@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.capstone.transit.trans_it.Settings">
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Switch"
+        android:id="@+id/notifications"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="206dp"
+        android:layout_marginStart="206dp"
+        android:textOff="Off"
+        android:textOn="On" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Switch"
+        android:id="@+id/realtime"
+        android:layout_marginTop="46dp"
+        android:layout_below="@+id/notifications"
+        android:layout_alignLeft="@+id/notifications"
+        android:layout_alignStart="@+id/notifications"
+        android:textOff="Off"
+        android:textOn="On" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Push Notifications"
+        android:id="@+id/notificationText"
+        android:layout_above="@+id/realtime"
+        android:layout_alignLeft="@+id/realTimeText"
+        android:layout_alignStart="@+id/realTimeText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Real Time Data"
+        android:id="@+id/realTimeText"
+        android:layout_marginLeft="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_alignBottom="@+id/realtime"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/refreshRate"
+        android:layout_below="@+id/realTimeText"
+        android:layout_alignRight="@+id/realtime"
+        android:layout_alignEnd="@+id/realtime"
+        android:layout_marginTop="44dp"
+        android:layout_alignLeft="@+id/realtime"
+        android:layout_alignStart="@+id/realtime"
+        android:indeterminate="false"
+        android:max="100" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh Rate"
+        android:id="@+id/refreshText"
+        android:layout_alignBottom="@+id/refreshRate"
+        android:layout_alignLeft="@+id/realTimeText"
+        android:layout_alignStart="@+id/realTimeText" />
+</RelativeLayout>
