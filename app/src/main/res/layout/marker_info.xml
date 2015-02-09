@@ -7,7 +7,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="this is the text of the activity" />
+        android:text="" />
 
 
 </LinearLayout>

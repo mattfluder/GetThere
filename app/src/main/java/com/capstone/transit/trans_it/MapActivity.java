@@ -259,19 +259,14 @@ public class MapActivity extends FragmentActivity {
 
     private void infoWindowClick(){
 
-        final ArrayList<String> LatValues = createLatArrayList();
-        final ArrayList<String> LonValues = createLonArrayList();
-        final ArrayList<String> StopIDs = createStopIDArrayList();
-
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-
                 Intent intent = new Intent(getBaseContext(), infoWindowClickActivity.class);
-                intent.putExtra("STOP_NAME", marker.getTitle());
-                intent.putExtra("STOP_ID", marker.getSnippet());
+                intent.putExtra("STOP_NAME", marker.getTitle()); // Passing stop name to next activity
+                intent.putExtra("STOP_ID", marker.getSnippet()); // Passing stop ID to next activity
                 startActivity(intent);
             }
         });
