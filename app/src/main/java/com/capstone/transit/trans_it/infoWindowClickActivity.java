@@ -16,9 +16,9 @@ import java.util.Arrays;
 /**
  * Created by Thomas on 2/8/2015.
  */
-public class infoWindowClickActivity extends Activity{
+public class infoWindowClickActivity extends Activity {
 
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         this.setTitle(retrieveStopName());
@@ -26,7 +26,7 @@ public class infoWindowClickActivity extends Activity{
         setRouteNames();
     }
 
-    public String retrieveStopName(){
+    public String retrieveStopName() {
 
         Intent intent = getIntent();
         String stopName = intent.getStringExtra("STOP_NAME");
@@ -35,13 +35,54 @@ public class infoWindowClickActivity extends Activity{
 
     }
 
-    public String retrieveStopID(){
+    public String retrieveStopID() {
 
         Intent intent = getIntent();
         String stopID = intent.getStringExtra("STOP_ID");
 
         return stopID;
     }
+
+    protected void setRouteNames() {
+
+        TextView t = (TextView) findViewById(R.id.textView1); // Linking variable t to the textView in the layout
+
+        String StopID = retrieveStopID();
+
+        AssetManager mngr;
+        ArrayList<String> RouteNames = new ArrayList<String>();
+        String line = null;
+        int count = 0;
+        boolean skillcheck = false;
+
+        try {
+            mngr = getAssets();
+            InputStream is = mngr.open("out.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            while ((line = br.readLine()) != null) {  // Read until last line in .txt file
+                if (count > 0) {
+                    line = line.toUpperCase();
+                    String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+
+                    if (Arrays.asList(ArrayValues).contains(StopID)) {
+                        for (int i = 1; i < ArrayValues.length; i++) {
+                            t.append(ArrayValues[i] + "\n");
+                        }
+                    }
+                }
+                count++;
+            }
+
+            br.close();
+        } catch (IOException e1) {
+
+        }
+    }
+}
+
+    /*
 
     public ArrayList<String> retrieveTripID(){
 
@@ -176,5 +217,4 @@ public class infoWindowClickActivity extends Activity{
         }
 
     }
-
-}
+    */
