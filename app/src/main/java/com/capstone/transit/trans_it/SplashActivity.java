@@ -50,6 +50,7 @@ public class SplashActivity extends Activity{
             super.onReceiveResult(resultCode,resultData);
             System.out.println("Result Received");
             startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
+            finish();
         }
     }
 

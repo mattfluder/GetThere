@@ -56,6 +56,9 @@ public class StopListActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
+                int count =  listAdapter.getGroupCount();
+                for (int i = 0; i <count ; i++)
+                    expListView.collapseGroup(i);
                 String stopID; //not what is posted on bus stop sign
                 String routeID;
                 stopID = translateStopId(stopCodeEdit.getText().toString()); //stop code is what is posted on bus stop sign
@@ -150,6 +153,7 @@ public class StopListActivity extends ActionBarActivity {
                         System.out.println("Next Loop");
                     }
                 }
+                listAdapter.notifyDataSetChanged();
             }
         });
     }
