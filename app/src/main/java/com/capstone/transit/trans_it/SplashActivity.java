@@ -48,7 +48,7 @@ public class SplashActivity extends Activity{
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode,resultData);
-            System.out.print("Result Received");
+            System.out.println("Result Received");
             startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
         }
     }

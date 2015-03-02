@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 
 public class MainMenu extends ActionBarActivity {
 
@@ -19,6 +23,7 @@ public class MainMenu extends ActionBarActivity {
      // Setting up button references
 
         Button Map = (Button) findViewById(R.id.MapB);
+        final Button StopList = (Button) findViewById(R.id.StopListB);
 
         Map.setOnClickListener(new View.OnClickListener() {
 
@@ -29,6 +34,14 @@ public class MainMenu extends ActionBarActivity {
             }
         });
 
+        StopList.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.StopListActivity"));
+            }
+        });
     }
 
     @Override
@@ -52,4 +65,5 @@ public class MainMenu extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
