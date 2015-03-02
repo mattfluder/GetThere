@@ -65,6 +65,7 @@ public class StopListActivity extends ActionBarActivity {
                 routesPerDataHeader = new ArrayList<Integer>();
                 listDataHeader.clear();
                 listDataChild.clear();
+                boolean stopFound = false;
 
                 int indexOfRouteId;
                 int currentRouteCount;
@@ -78,6 +79,15 @@ public class StopListActivity extends ActionBarActivity {
                     InputStreamReader isr = new InputStreamReader(is);
                     BufferedReader br = new BufferedReader(isr);
                     int routes;
+
+                    try {
+                        fileIn = openFileInput("GTFS_TripUpdates.pb");
+                        realData = FeedMessage.parseFrom(fileIn);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+
 
                     while ((line = br.readLine()) != null) {  // Read until last line in .txt file
                             String[] ArrayValues = line.split(","); // Seperate line by commas into a list
@@ -98,23 +108,16 @@ public class StopListActivity extends ActionBarActivity {
                                         }
                                     }
                                     routesPerDataHeader.add(routes);
+                                    stopFound = true;
                                 }
                             }
-                            else realData = null;
                     }
-
                     br.close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
 
-                try {
-                    fileIn = openFileInput("GTFS_TripUpdates.pb");
-                    realData = FeedMessage.parseFrom(fileIn);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                if (!stopFound) realData = null;
 
                 if (realData != null) {
                     currentRouteCount = 0;
