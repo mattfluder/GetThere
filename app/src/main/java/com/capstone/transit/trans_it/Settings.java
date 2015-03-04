@@ -7,21 +7,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Switch;
-import android.widget.Toast;
+import android.widget.*;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 
 public class Settings extends ActionBarActivity {
 
 
-    Switch notifications;
-    Switch realtime;
+    private Switch notifications;
+    private Switch realtime;
+    private SeekBar refreshrate;
+    private TextView progressView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
+        setUpButton();
 
     }
 
@@ -52,43 +55,61 @@ public class Settings extends ActionBarActivity {
     {
         notifications = (Switch) findViewById(R.id.notifications);
         realtime  = (Switch) findViewById(R.id.realtime);
+        refreshrate = (SeekBar) findViewById(R.id.refreshRate);
+        progressView=(TextView) findViewById(R.id.progressView);
+        notifications.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-
-        notifications.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View v){
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(notifications.isChecked())
                 {
-                    notifications.setChecked(false);
-                    Toast.makeText(Settings.this, "Notifications Off", Toast.LENGTH_LONG).show();
+                    //notifications.setChecked(false);
+                    Toast.makeText(Settings.this, "Notifications ON", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    notifications.setChecked(true);
-                    Toast.makeText(Settings.this, "Notifications On", Toast.LENGTH_LONG).show();
+                   // notifications.setChecked(true);
+                    Toast.makeText(Settings.this, "Notifications OFF", Toast.LENGTH_LONG).show();
                 }
                 //Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
               //  startActivity(intent);
             }
         });
         //thing
-        realtime.setOnClickListener(new View.OnClickListener(){
+        realtime.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-            public void onClick(View v){
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(realtime.isChecked())
                 {
-                    realtime.setChecked(false);
-                    Toast.makeText(Settings.this, "Realtime Off", Toast.LENGTH_LONG).show();
+                    //realtime.setChecked(false);
+                    Toast.makeText(Settings.this, "Realtime ON", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    realtime.setChecked(true);
-                    Toast.makeText(Settings.this, "Realtime On", Toast.LENGTH_LONG).show();
+                    //realtime.setChecked(true);
+                    Toast.makeText(Settings.this, "Realtime OFF", Toast.LENGTH_LONG).show();
                 }
 
             }
+        });
+
+       refreshrate.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+        {
+            int progress = 0;
+
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+               progress = progresValue;
+              Toast.makeText(getApplicationContext(), "Changing seekbar's progress", Toast.LENGTH_SHORT).show();
+                }
+
+           public void onStartTrackingTouch(SeekBar seekBar) {
+                 Toast.makeText(getApplicationContext(), "Started tracking seekbar", Toast.LENGTH_SHORT).show();
+                }
+
+          public void onStopTrackingTouch(SeekBar seekBar) {
+                progressView.setText("Covered: " + progress + "/" + seekBar.getMax());
+                Toast.makeText(getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
+                  }
+
         });
 
 

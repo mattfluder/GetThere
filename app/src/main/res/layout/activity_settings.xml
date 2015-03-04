@@ -9,67 +9,73 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Switch"
         android:id="@+id/notifications"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="206dp"
-        android:layout_marginStart="206dp"
         android:textOff="Off"
-        android:textOn="On" />
+        android:textOn="On"
+        android:maxLines="1"
+        android:text="Push Notifications"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="42dp"
+        android:layout_marginEnd="42dp"
+        android:textAlignment="gravity"
+        android:textStyle="normal"
+
+        android:textSize="12dp" />
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Switch"
         android:id="@+id/realtime"
         android:layout_marginTop="46dp"
-        android:layout_below="@+id/notifications"
-        android:layout_alignLeft="@+id/notifications"
-        android:layout_alignStart="@+id/notifications"
         android:textOff="Off"
-        android:textOn="On" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Push Notifications"
-        android:id="@+id/notificationText"
-        android:layout_above="@+id/realtime"
-        android:layout_alignLeft="@+id/realTimeText"
-        android:layout_alignStart="@+id/realTimeText" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:textOn="On"
+        android:maxLines="1"
         android:text="Real Time Data"
-        android:id="@+id/realTimeText"
-        android:layout_marginLeft="48dp"
-        android:layout_marginStart="48dp"
-        android:layout_alignBottom="@+id/realtime"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/notifications"
+        android:layout_alignRight="@+id/notifications"
+        android:layout_alignEnd="@+id/notifications"
+        android:textAlignment="gravity"
+        android:textStyle="normal"
+
+        android:textSize="12dp" />
 
     <SeekBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/refreshRate"
-        android:layout_below="@+id/realTimeText"
+        android:indeterminate="false"
+        android:max="100"
+        android:minWidth="60dp"
+        android:layout_below="@+id/realtime"
         android:layout_alignRight="@+id/realtime"
         android:layout_alignEnd="@+id/realtime"
-        android:layout_marginTop="44dp"
-        android:layout_alignLeft="@+id/realtime"
-        android:layout_alignStart="@+id/realtime"
-        android:indeterminate="false"
-        android:max="100" />
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Refresh Rate"
         android:id="@+id/refreshText"
+        android:textStyle="normal"
         android:layout_alignBottom="@+id/refreshRate"
-        android:layout_alignLeft="@+id/realTimeText"
-        android:layout_alignStart="@+id/realTimeText" />
+        android:layout_toLeftOf="@+id/refreshRate"
+        android:layout_toStartOf="@+id/refreshRate"
+        android:autoText="false"
+
+        android:textSize="12dp"
+        android:layout_alignParentRight="false"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentEnd="false"
+        android:textColor="#ff000000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressView"
+        android:layout_below="@+id/refreshRate"
+        android:layout_alignLeft="@+id/refreshRate"
+        android:layout_alignStart="@+id/refreshRate" />
+
 </RelativeLayout>
