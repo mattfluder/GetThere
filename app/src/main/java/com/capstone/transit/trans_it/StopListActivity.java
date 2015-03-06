@@ -1,5 +1,6 @@
 package com.capstone.transit.trans_it;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -52,6 +53,8 @@ public class StopListActivity extends ActionBarActivity {
         listAdapter = new ExpandableListAdapter(this,listDataHeader,listDataChild);
         expListView.setAdapter(listAdapter);
 
+        String StopCode = retrieveStopCode();
+
         GoButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -90,7 +93,6 @@ public class StopListActivity extends ActionBarActivity {
                     catch (Exception e){
                         e.printStackTrace();
                     }
-
 
                     while ((line = br.readLine()) != null) {  // Read until last line in .txt file
                             String[] ArrayValues = line.split(","); // Seperate line by commas into a list
@@ -156,8 +158,14 @@ public class StopListActivity extends ActionBarActivity {
                 listAdapter.notifyDataSetChanged();
             }
         });
-    }
 
+        if (StopCode != null){
+
+            stopCodeEdit.setText(StopCode);
+            GoButton.callOnClick();
+
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -180,6 +188,7 @@ public class StopListActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     private String translateStopId(String stopCode){
         String stopId = "";
 
@@ -197,5 +206,12 @@ public class StopListActivity extends ActionBarActivity {
             // handle exception
         }
         return stopId;
+    }
+
+    public String retrieveStopCode() {
+
+        Intent intent = getIntent();
+
+        return intent.getStringExtra("STOP_CODE");
     }
 }

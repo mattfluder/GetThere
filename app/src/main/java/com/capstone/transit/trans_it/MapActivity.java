@@ -185,6 +185,35 @@ public class MapActivity extends FragmentActivity {
 
     }
 
+    public ArrayList<String> createStopCodeArrayList(){
+        AssetManager mngr;
+        String line = null;
+        ArrayList<String> StopCode = new ArrayList<String>();
+        int count=0;
+        boolean skillcheck = false;
+
+        try{
+            mngr = getAssets();
+            InputStream is = mngr.open("stops.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            while((line=br.readLine()) != null){  // Read until last line in .txt file
+                if(count>0){
+                    line = line.toUpperCase();
+                    String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+                    StopCode.add(ArrayValues[2]);  // Access first index (latitude) and add to ArrayList
+                }
+                count++;
+            }
+            br.close();
+        }
+        catch (IOException e1){
+        }
+        return StopCode;
+
+    }
+
     public List<Marker> createMarkerList(){
 
         // Storing the latitude / longitude / names by calling their respective functions
@@ -193,13 +222,14 @@ public class MapActivity extends FragmentActivity {
         ArrayList<String> LonValues = createLonArrayList();
         ArrayList<String> StopNames = createStopNameArrayList();
         ArrayList<String> StopIDs = createStopIDArrayList();
+        ArrayList<String> StopCodes = createStopCodeArrayList();
 
 
         // Creating a marker list to store the markers
 
         List<Marker> markers = new ArrayList<Marker>();
 
-        String StopName,StopID;
+        String StopName,StopID,StopCode;
         final int size = LatValues.size();
         double LatV,LonV;
         int i = 0;
@@ -212,12 +242,13 @@ public class MapActivity extends FragmentActivity {
             LonV = Double.parseDouble(LonValues.get(i));
             StopName = StopNames.get(i);
             StopID = StopIDs.get(i);
+            StopCode = StopCodes.get(i);
 
             // Set a marker for each iteration
             // Add each marker to the list "Markers"
 
             Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(LatV, LonV)).title(StopName));
-            marker.setSnippet(StopID);
+            marker.setSnippet(StopCode);
             markers.add(marker);
             i++;
         }
@@ -264,9 +295,9 @@ public class MapActivity extends FragmentActivity {
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-                Intent intent = new Intent(getBaseContext(), infoWindowClickActivity.class);
-                intent.putExtra("STOP_NAME", marker.getTitle()); // Passing stop name to next activity
-                intent.putExtra("STOP_ID", marker.getSnippet()); // Passing stop ID to next activity
+                Intent intent = new Intent(getBaseContext(), StopListActivity.class);
+                //intent.putExtra("STOP_NAME", marker.getTitle()); // Passing stop name to next activity
+                intent.putExtra("STOP_CODE", marker.getSnippet()); // Passing stop ID to next activity
                 startActivity(intent);
             }
         });
