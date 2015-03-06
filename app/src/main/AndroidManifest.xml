@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.capstone.transit.trans_it" >
 
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="21" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -74,11 +78,11 @@
 
         <activity
             android:name=".StopListActivity"
-            android:label="@string/title_activity_stop_list"
-            android:parentActivityName=".MainMenu" >
+            android:label="Stop Monitor">
+            <!--android:parentActivityName=".MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.capstone.transit.trans_it.MainMenu" />
+                android:value="com.capstone.transit.trans_it.MainMenu" /> -->
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.StopListActivity" />
 

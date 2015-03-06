@@ -2,9 +2,11 @@ package com.capstone.transit.trans_it;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -17,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class MapActivity extends FragmentActivity {
         setUpMapIfNeeded();
         testCameraChange();
         infoWindowClick();
+        acquireUserLocation();
 
         //Map Activity Done
 
@@ -51,8 +55,24 @@ public class MapActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
+                mMap.setMyLocationEnabled(true);
             }
         }
+    }
+
+    public Location acquireUserLocation(){
+
+        //double[] myLatLon = new double[2];
+
+        Location myLocation = mMap.getMyLocation();
+
+        //double myLat = myLocation.getLatitude();
+        //myLatLon[1] = myLocation.getLongitude();
+
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(myLatLon[0], myLatLon[1])).title("Me"));
+
+        return myLocation;
+
     }
 
     public ArrayList<String> createLatArrayList(){
@@ -185,6 +205,35 @@ public class MapActivity extends FragmentActivity {
 
     }
 
+    public ArrayList<String> createStopCodeArrayList(){
+        AssetManager mngr;
+        String line = null;
+        ArrayList<String> StopCode = new ArrayList<String>();
+        int count=0;
+        boolean skillcheck = false;
+
+        try{
+            mngr = getAssets();
+            InputStream is = mngr.open("stops.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            while((line=br.readLine()) != null){  // Read until last line in .txt file
+                if(count>0){
+                    line = line.toUpperCase();
+                    String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+                    StopCode.add(ArrayValues[2]);  // Access first index (latitude) and add to ArrayList
+                }
+                count++;
+            }
+            br.close();
+        }
+        catch (IOException e1){
+        }
+        return StopCode;
+
+    }
+
     public List<Marker> createMarkerList(){
 
         // Storing the latitude / longitude / names by calling their respective functions
@@ -193,13 +242,14 @@ public class MapActivity extends FragmentActivity {
         ArrayList<String> LonValues = createLonArrayList();
         ArrayList<String> StopNames = createStopNameArrayList();
         ArrayList<String> StopIDs = createStopIDArrayList();
+        ArrayList<String> StopCodes = createStopCodeArrayList();
 
 
         // Creating a marker list to store the markers
 
         List<Marker> markers = new ArrayList<Marker>();
 
-        String StopName,StopID;
+        String StopName,StopID,StopCode;
         final int size = LatValues.size();
         double LatV,LonV;
         int i = 0;
@@ -212,12 +262,14 @@ public class MapActivity extends FragmentActivity {
             LonV = Double.parseDouble(LonValues.get(i));
             StopName = StopNames.get(i);
             StopID = StopIDs.get(i);
+            StopCode = StopCodes.get(i);
 
             // Set a marker for each iteration
             // Add each marker to the list "Markers"
 
             Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(LatV, LonV)).title(StopName));
-            marker.setSnippet(StopID);
+            marker.setSnippet(StopCode);
+            marker.setVisible(false);
             markers.add(marker);
             i++;
         }
@@ -264,12 +316,14 @@ public class MapActivity extends FragmentActivity {
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-                Intent intent = new Intent(getBaseContext(), infoWindowClickActivity.class);
-                intent.putExtra("STOP_NAME", marker.getTitle()); // Passing stop name to next activity
-                intent.putExtra("STOP_ID", marker.getSnippet()); // Passing stop ID to next activity
+                Intent intent = new Intent(getBaseContext(), StopListActivity.class);
+                //intent.putExtra("STOP_NAME", marker.getTitle()); // Passing stop name to next activity
+                intent.putExtra("STOP_CODE", marker.getSnippet()); // Passing stop ID to next activity
                 startActivity(intent);
             }
         });
 
     }
+
+
 }
