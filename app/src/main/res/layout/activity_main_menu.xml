@@ -6,36 +6,35 @@
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainMenu">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:text="Trip Planner"
         android:id="@+id/TripPlannerB"
-        android:layout_alignTop="@+id/StopListB"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/MapB"
+        android:layout_alignStart="@+id/MapB" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:text="Stop Monitor"
         android:id="@+id/StopListB"
-        android:layout_marginTop="41dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/TripPlannerB"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:text="Route List"
         android:id="@+id/RouteListB"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@+id/MapB"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:text="Map"
         android:id="@+id/MapB"
         android:layout_centerVertical="true"
@@ -43,18 +42,17 @@
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:text="Settings"
         android:id="@+id/SettingsB"
-        android:layout_marginBottom="90dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignLeft="@+id/MapB"
+        android:layout_alignStart="@+id/MapB" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:text="Favorites"
         android:id="@+id/FavoritesB"
         android:layout_alignTop="@+id/SettingsB"

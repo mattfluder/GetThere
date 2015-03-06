@@ -2,6 +2,8 @@ package com.capstone.transit.trans_it;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -214,4 +216,5 @@ public class StopListActivity extends ActionBarActivity {
 
         return intent.getStringExtra("STOP_CODE");
     }
+
 }
