@@ -90,7 +90,7 @@ public class StopListActivity extends ActionBarActivity {
 
                     try {
                         fileIn = openFileInput("GTFS_TripUpdates.pb");
-                        realData = FeedMessage.parseFrom(fileIn);
+                        realData = FeedMessage.parseFrom(fileIn); //get data from pb file
                     }
                     catch (Exception e){
                         e.printStackTrace();
@@ -99,18 +99,18 @@ public class StopListActivity extends ActionBarActivity {
                     while ((line = br.readLine()) != null) {  // Read until last line in .txt file
                             String[] ArrayValues = line.split(","); // Seperate line by commas into a list
 
-                            if (stopID.equals(ArrayValues[0])) {
+                            if (stopID.equals(ArrayValues[0])) { //if the stop id inputted equals the stop id of the current line being read
                                 for (int i=1; i<ArrayValues.length;i++) {
                                     routes = 0;
                                     System.out.println(ArrayValues[i]);
-                                    listDataHeader.add(ArrayValues[i]);
+                                    listDataHeader.add(ArrayValues[i]); //add the route at the current position to the list of headers
                                     InputStream is2 = mngr.open("routes.txt");
                                     InputStreamReader isr2 = new InputStreamReader(is2);
                                     BufferedReader br2 = new BufferedReader(isr2);
-                                    while ((line2 = br2.readLine()) != null) {  // Read until last line in .txt file
+                                    while ((line2 = br2.readLine()) != null) {  // Read until last line in routes.txt file
                                         String [] ArrayValues2 = line2.split(","); // Seperate line by commas into a list
-                                        if (ArrayValues2[8].equals(ArrayValues[i].substring(0,2))){
-                                            routesServicing.add(ArrayValues2[5]);
+                                        if (ArrayValues2[8].equals(ArrayValues[i].substring(0,2))){ //if the
+                                            routesServicing.add(ArrayValues2[5]);//
                                             routes ++;
                                         }
                                     }
@@ -205,7 +205,7 @@ public class StopListActivity extends ActionBarActivity {
             is.close();
         }
         catch (IOException ex) {
-            // handle exception
+            ex.printStackTrace();
         }
         return stopId;
     }
