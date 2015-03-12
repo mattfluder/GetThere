@@ -1,9 +1,11 @@
 package com.capstone.transit.trans_it;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.view.MenuItem;
 
 /**
@@ -16,24 +18,9 @@ public class SplashActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-
-
-        Thread logoTimer = new Thread(){
-            public void run(){
-                try{
-                    sleep(1000);
-                    startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                finally{
-                    finish();
-                }
-            }
-        };
-        logoTimer.start();
-
+        Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
+        fetchTimesIntent.putExtra("receiver",new timesReceiver(new Handler()));
+        startService(fetchTimesIntent);
     }
 
 
@@ -54,7 +41,18 @@ public class SplashActivity extends Activity{
         }
         return super.onOptionsItemSelected(item);
     }
-
+    class timesReceiver extends ResultReceiver {
+        public timesReceiver(Handler handler){
+            super(handler);
+        }
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode,resultData);
+            System.out.println("Result Received");
+            startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
+            finish();
+        }
+    }
 
 
 

@@ -6,23 +6,43 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 public class MainMenu extends ActionBarActivity {
-
-    Button settings;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        setUpButton();
-    }
 
-    // Tom Commiting Test
-    // Matt commit test
+     // Setting up button references
+
+        Button Map = (Button) findViewById(R.id.MapB);
+        final Button StopList = (Button) findViewById(R.id.StopListB);
+
+        Map.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.MAPACTIVITY"));
+            }
+        });
+
+        StopList.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.StopListActivity"));
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,15 +66,4 @@ public class MainMenu extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setUpButton() {
-        settings = (Button) findViewById(R.id.SettingsB);
-
-        settings.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Settings.class);
-                startActivity(intent);
-            }
-        });
-    }
 }
