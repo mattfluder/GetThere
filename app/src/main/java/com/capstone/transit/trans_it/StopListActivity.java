@@ -1,17 +1,22 @@
 package com.capstone.transit.trans_it;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.google.transit.realtime.GtfsRealtime.*;
 
@@ -42,7 +47,7 @@ public class StopListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_stop_list);
 
         final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
-        Button GoButton = (Button) findViewById(R.id.goButton);
+        final Button GoButton = (Button) findViewById(R.id.goButton);
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
         final Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
@@ -50,10 +55,26 @@ public class StopListActivity extends ActionBarActivity {
 
         String intentStopCode = retrieveStopCode();
 
+        stopCodeEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE){
+                    GoButton.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         GoButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
                 startService(fetchTimesIntent);
             }
         });
@@ -208,7 +229,7 @@ public class StopListActivity extends ActionBarActivity {
         }
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            super.onReceiveResult(resultCode,resultData);
+            super.onReceiveResult(resultCode, resultData);
             System.out.println("Result Received");
             updateTimesList();
         }
