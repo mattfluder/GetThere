@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
-import com.google.protobuf.Internal;
 import com.google.transit.realtime.GtfsRealtime.*;
 
 import java.io.BufferedReader;
@@ -23,7 +22,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,29 +29,24 @@ import java.util.List;
 
 public class StopListActivity extends ActionBarActivity {
 
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
-    List<String> routesServicing;
-    List<String> listRouteTimes;
-    List<Integer> routesPerDataHeader;
+    private ExpandableListAdapter listAdapter;
+    private ExpandableListView expListView;
+    private List<String> listDataHeader;
+    private HashMap<String, List<String>> listDataChild;
+    private List<String> routesServicing;
+    private List<String> listRouteTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stop_list);
 
-        Button GoButton = (Button) findViewById(R.id.goButton);
         final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
-
+        Button GoButton = (Button) findViewById(R.id.goButton);
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
 
-
-        listAdapter = new ExpandableListAdapter(this,listDataHeader,listDataChild);
-        expListView.setAdapter(listAdapter);
+        final Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
+        fetchTimesIntent.putExtra("receiver",new times2Receiver(new Handler()));
 
         String intentStopCode = retrieveStopCode();
 
@@ -61,108 +54,11 @@ public class StopListActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                int count =  listAdapter.getGroupCount();
-                for (int i = 0; i <count ; i++)
-                    expListView.collapseGroup(i);
-                String stopID; //not what is posted on bus stop sign
-                String routeID;
-                stopID = translateStopId(stopCodeEdit.getText().toString()); //stop code is what is posted on bus stop sign
-                FeedMessage realData = null;
-                FileInputStream fileIn = null;
-                routesServicing = new ArrayList<String>();
-                routesPerDataHeader = new ArrayList<Integer>();
-                listDataHeader.clear();
-                listDataChild.clear();
-                boolean stopFound = false;
-
-                int indexOfRouteId;
-
-                AssetManager mngr;
-                String line, longAndShortName;
-
-                try {
-                    mngr = getAssets();
-                    InputStream is = mngr.open("routesAtStop.txt");
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader br = new BufferedReader(isr);
-
-                    try {
-                        fileIn = openFileInput("GTFS_TripUpdates.pb");
-                        realData = FeedMessage.parseFrom(fileIn); //get data from pb file
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                    while ((line = br.readLine()) != null) {  // Read until last line in .txt file
-                            String[] ArrayValues = line.split(","); // Seperate line by commas into a list
-
-                            if (stopID.equals(ArrayValues[0])) { //if the stop id inputted equals the stop id of the current line being read
-                                stopFound = true;
-                                longAndShortName = ArrayValues[2] + " " + ArrayValues [3];
-                                listDataHeader.add(longAndShortName);
-                                routesServicing.add(ArrayValues[1]);
-                                /*for (int i=1; i<ArrayValues.length;i++) {
-                                    routes = 0;
-                                    System.out.println(ArrayValues[i]);
-                                    listDataHeader.add(ArrayValues[i]); //add the route at the current position to the list of headers
-                                    InputStream is2 = mngr.open("routes.txt");
-                                    InputStreamReader isr2 = new InputStreamReader(is2);
-                                    BufferedReader br2 = new BufferedReader(isr2);
-                                    while ((line2 = br2.readLine()) != null) {  // Read until last line in routes.txt file
-                                        String [] ArrayValues2 = line2.split(","); // Seperate line by commas into a list
-                                        if (ArrayValues2[8].equals(ArrayValues[i].substring(0,2))){ //if the
-                                            routesServicing.add(ArrayValues2[5]);//
-                                            routes ++;
-                                        }
-                                    }
-                                    routesPerDataHeader.add(routes);
-                                    stopFound = true;
-                                }*/
-                            }
-                    }
-                    br.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-
-                if (!stopFound) realData = null;
-
-                if (realData != null) {
-                    for (int i = 0; i < listDataHeader.size(); i++) {
-                        listRouteTimes = new ArrayList<String>();
-                        for (FeedEntity entity : realData.getEntityList()) {
-                            if (!entity.hasTripUpdate()) continue;
-                            TripUpdate trip = entity.getTripUpdate();
-                            if (!trip.hasTrip()) continue;
-                            routeID = trip.getTrip().getRouteId();
-                            indexOfRouteId = routesServicing.indexOf(routeID);
-                            if (indexOfRouteId != i) continue;
-                            System.out.println(routeID);
-                            for (TripUpdate.StopTimeUpdate stopTime : trip.getStopTimeUpdateList()) {
-                                if (stopTime.getStopId().equals(stopID)) {
-                                    TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
-                                    long unixSeconds = stopEventArrival.getTime();
-                                    Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
-                                    SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
-                                    String formattedDate = sdf.format(date);
-                                    listRouteTimes.add(formattedDate);
-                                    System.out.println(String.valueOf(stopEventArrival.getTime()));
-                                }
-                            }
-                        }
-                        System.out.println("Adding to List");
-                        if (listRouteTimes.isEmpty())listRouteTimes.add("");
-                        listDataChild.put(listDataHeader.get(i),listRouteTimes);
-                        System.out.println("Next Loop");
-                    }
-                }
-                listAdapter.notifyDataSetChanged();
+                startService(fetchTimesIntent);
             }
         });
 
         if (intentStopCode != null){
-
             stopCodeEdit.setText(intentStopCode);
             GoButton.performClick();
         }
@@ -209,11 +105,112 @@ public class StopListActivity extends ActionBarActivity {
         return stopId;
     }
 
-    public String retrieveStopCode() {
+    private String retrieveStopCode() {
 
         Intent intent = getIntent();
 
         return intent.getStringExtra("STOP_CODE");
     }
 
+    private void updateTimesList(){
+
+        final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
+
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+
+        listAdapter = new ExpandableListAdapter(this,listDataHeader,listDataChild);
+        expListView.setAdapter(listAdapter);
+
+        int count =  listAdapter.getGroupCount();
+        for (int i = 0; i <count ; i++)
+            expListView.collapseGroup(i);
+        String stopID; //not what is posted on bus stop sign
+        String routeID;
+        stopID = translateStopId(stopCodeEdit.getText().toString()); //stop code is what is posted on bus stop sign
+        FeedMessage realData = null;
+        FileInputStream fileIn = null;
+        routesServicing = new ArrayList<String>();
+        listDataHeader.clear();
+        listDataChild.clear();
+        boolean stopFound = false;
+
+        int indexOfRouteId;
+
+        AssetManager mngr;
+        String line, longAndShortName;
+
+        try {
+            mngr = getAssets();
+            InputStream is = mngr.open("routesAtStop.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            try {
+                fileIn = openFileInput("GTFS_TripUpdates.pb");
+                realData = FeedMessage.parseFrom(fileIn); //get data from pb file
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            while ((line = br.readLine()) != null) {  // Read until last line in .txt file
+                String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+
+                if (stopID.equals(ArrayValues[0])) { //if the stop id inputted equals the stop id of the current line being read
+                    stopFound = true;
+                    longAndShortName = ArrayValues[2] + " " + ArrayValues [3];
+                    listDataHeader.add(longAndShortName);
+                    routesServicing.add(ArrayValues[1]);
+                }
+            }
+            br.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        if (!stopFound) realData = null;
+
+        if (realData != null) {
+            for (int i = 0; i < listDataHeader.size(); i++) {
+                listRouteTimes = new ArrayList<String>();
+                for (FeedEntity entity : realData.getEntityList()) {
+                    if (!entity.hasTripUpdate()) continue;
+                    TripUpdate trip = entity.getTripUpdate();
+                    if (!trip.hasTrip()) continue;
+                    routeID = trip.getTrip().getRouteId();
+                    indexOfRouteId = routesServicing.indexOf(routeID);
+                    if (indexOfRouteId != i) continue;
+                    System.out.println(routeID);
+                    for (TripUpdate.StopTimeUpdate stopTime : trip.getStopTimeUpdateList()) {
+                        if (stopTime.getStopId().equals(stopID)) {
+                            TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
+                            long unixSeconds = stopEventArrival.getTime();
+                            Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
+                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+                            String formattedDate = sdf.format(date);
+                            listRouteTimes.add(formattedDate);
+                            System.out.println(String.valueOf(stopEventArrival.getTime()));
+                        }
+                    }
+                }
+                System.out.println("Adding to List");
+                if (listRouteTimes.isEmpty())listRouteTimes.add("");
+                listDataChild.put(listDataHeader.get(i),listRouteTimes);
+                System.out.println("Next Loop");
+            }
+        }
+        listAdapter.notifyDataSetChanged();
+    }
+    class times2Receiver extends ResultReceiver {
+        public times2Receiver(Handler handler){
+            super(handler);
+        }
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode,resultData);
+            System.out.println("Result Received");
+            updateTimesList();
+        }
+    }
 }
