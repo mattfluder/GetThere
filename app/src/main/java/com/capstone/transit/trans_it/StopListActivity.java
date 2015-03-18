@@ -55,7 +55,7 @@ public class StopListActivity extends ActionBarActivity {
         listAdapter = new ExpandableListAdapter(this,listDataHeader,listDataChild);
         expListView.setAdapter(listAdapter);
 
-        String StopCode = retrieveStopCode();
+        String intentStopCode = retrieveStopCode();
 
         GoButton.setOnClickListener(new View.OnClickListener() {
 
@@ -76,17 +76,15 @@ public class StopListActivity extends ActionBarActivity {
                 boolean stopFound = false;
 
                 int indexOfRouteId;
-                int currentRouteCount;
 
                 AssetManager mngr;
-                String line, line2;
+                String line, longAndShortName;
 
                 try {
                     mngr = getAssets();
-                    InputStream is = mngr.open("out.txt");
+                    InputStream is = mngr.open("routesAtStop.txt");
                     InputStreamReader isr = new InputStreamReader(is);
                     BufferedReader br = new BufferedReader(isr);
-                    int routes;
 
                     try {
                         fileIn = openFileInput("GTFS_TripUpdates.pb");
@@ -100,7 +98,11 @@ public class StopListActivity extends ActionBarActivity {
                             String[] ArrayValues = line.split(","); // Seperate line by commas into a list
 
                             if (stopID.equals(ArrayValues[0])) { //if the stop id inputted equals the stop id of the current line being read
-                                for (int i=1; i<ArrayValues.length;i++) {
+                                stopFound = true;
+                                longAndShortName = ArrayValues[2] + " " + ArrayValues [3];
+                                listDataHeader.add(longAndShortName);
+                                routesServicing.add(ArrayValues[1]);
+                                /*for (int i=1; i<ArrayValues.length;i++) {
                                     routes = 0;
                                     System.out.println(ArrayValues[i]);
                                     listDataHeader.add(ArrayValues[i]); //add the route at the current position to the list of headers
@@ -116,7 +118,7 @@ public class StopListActivity extends ActionBarActivity {
                                     }
                                     routesPerDataHeader.add(routes);
                                     stopFound = true;
-                                }
+                                }*/
                             }
                     }
                     br.close();
@@ -127,24 +129,22 @@ public class StopListActivity extends ActionBarActivity {
                 if (!stopFound) realData = null;
 
                 if (realData != null) {
-                    currentRouteCount = 0;
                     for (int i = 0; i < listDataHeader.size(); i++) {
                         listRouteTimes = new ArrayList<String>();
-                        currentRouteCount +=2;
                         for (FeedEntity entity : realData.getEntityList()) {
                             if (!entity.hasTripUpdate()) continue;
                             TripUpdate trip = entity.getTripUpdate();
                             if (!trip.hasTrip()) continue;
                             routeID = trip.getTrip().getRouteId();
                             indexOfRouteId = routesServicing.indexOf(routeID);
-                            if ((indexOfRouteId > ((currentRouteCount+2*i)-1) || (indexOfRouteId < currentRouteCount-2))) continue;
+                            if (indexOfRouteId != i) continue;
                             System.out.println(routeID);
                             for (TripUpdate.StopTimeUpdate stopTime : trip.getStopTimeUpdateList()) {
                                 if (stopTime.getStopId().equals(stopID)) {
                                     TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
                                     long unixSeconds = stopEventArrival.getTime();
                                     Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
-                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                                    SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
                                     String formattedDate = sdf.format(date);
                                     listRouteTimes.add(formattedDate);
                                     System.out.println(String.valueOf(stopEventArrival.getTime()));
@@ -161,11 +161,10 @@ public class StopListActivity extends ActionBarActivity {
             }
         });
 
-        if (StopCode != null){
+        if (intentStopCode != null){
 
-            stopCodeEdit.setText(StopCode);
-            GoButton.callOnClick();
-
+            stopCodeEdit.setText(intentStopCode);
+            GoButton.performClick();
         }
     }
 
