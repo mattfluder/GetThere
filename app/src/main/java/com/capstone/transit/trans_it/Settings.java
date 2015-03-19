@@ -1,6 +1,10 @@
 package com.capstone.transit.trans_it;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +29,31 @@ public class Settings extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setUpButton();
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!");
+
+        Intent resultIntent = new Intent(this,MainMenu.class);
+// Because clicking the notification opens a new ("special") activity, there's
+// no need to create an artificial back stack.
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentIntent(resultPendingIntent);
+
+// Sets an ID for the notification
+        int mNotificationId = 001;
+// Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
     }
 
@@ -63,12 +92,14 @@ public class Settings extends ActionBarActivity {
                 if(notifications.isChecked())
                 {
                     //notifications.setChecked(false);
-                    Toast.makeText(Settings.this, "Notifications ON", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Settings.this, "Notifications ON", Toast.LENGTH_SHORT).show();
+
+
                 }
                 else
                 {
                    // notifications.setChecked(true);
-                    Toast.makeText(Settings.this, "Notifications OFF", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Settings.this, "Notifications OFF", Toast.LENGTH_SHORT).show();
                 }
                 //Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
               //  startActivity(intent);
@@ -81,12 +112,12 @@ public class Settings extends ActionBarActivity {
                 if(realtime.isChecked())
                 {
                     //realtime.setChecked(false);
-                    Toast.makeText(Settings.this, "Realtime ON", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Settings.this, "Realtime ON", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     //realtime.setChecked(true);
-                    Toast.makeText(Settings.this, "Realtime OFF", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Settings.this, "Realtime OFF", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -96,8 +127,8 @@ public class Settings extends ActionBarActivity {
         {
             int progress = 0;
 
-            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-               progress = progresValue;
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+               progress = progressValue;
               Toast.makeText(getApplicationContext(), "Changing seekbar's progress", Toast.LENGTH_SHORT).show();
                 }
 
@@ -106,7 +137,7 @@ public class Settings extends ActionBarActivity {
                 }
 
           public void onStopTrackingTouch(SeekBar seekBar) {
-                progressView.setText("Covered: " + progress + "/" + seekBar.getMax());
+                progressView.setText("Refreshrate " + progress + " /minute");
                 Toast.makeText(getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
                   }
 

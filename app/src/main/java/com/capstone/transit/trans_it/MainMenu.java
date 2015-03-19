@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,9 +22,19 @@ public class MainMenu extends ActionBarActivity {
         setContentView(R.layout.activity_main_menu);
 
      // Setting up button references
+        final ImageButton settings = (ImageButton) findViewById(R.id.SettingsA);
+        final ImageButton Map = (ImageButton) findViewById(R.id.MapA);
+        final ImageButton StopList = (ImageButton) findViewById(R.id.StopMonitorA);
 
-        Button Map = (Button) findViewById(R.id.MapB);
-        final Button StopList = (Button) findViewById(R.id.StopListB);
+        settings.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.Settings"));
+                settings.setImageResource(R.drawable.ic_launcher);
+            }
+        });
 
         Map.setOnClickListener(new View.OnClickListener() {
 
@@ -31,6 +42,7 @@ public class MainMenu extends ActionBarActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.MAPACTIVITY"));
+                Map.setImageResource(R.drawable.ic_launcher);
             }
         });
 
@@ -40,6 +52,7 @@ public class MainMenu extends ActionBarActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.StopListActivity"));
+                StopList.setImageResource(R.drawable.ic_launcher);
             }
         });
     }

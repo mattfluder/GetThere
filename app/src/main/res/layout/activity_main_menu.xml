@@ -5,58 +5,53 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainMenu">
 
-    <Button
+    <ImageButton
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:text="Trip Planner"
-        android:id="@+id/TripPlannerB"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/MapB"
-        android:layout_alignStart="@+id/MapB" />
-
-    <Button
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:text="Stop Monitor"
-        android:id="@+id/StopListB"
-        android:layout_alignTop="@+id/TripPlannerB"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:text="Route List"
-        android:id="@+id/RouteListB"
-        android:layout_alignTop="@+id/MapB"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:text="Map"
-        android:id="@+id/MapB"
-        android:layout_centerVertical="true"
+        android:id="@+id/TripPlannerA"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <Button
+    <ImageButton
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:text="Settings"
-        android:id="@+id/SettingsB"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/MapB"
-        android:layout_alignStart="@+id/MapB" />
-
-    <Button
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:text="Favorites"
-        android:id="@+id/FavoritesB"
-        android:layout_alignTop="@+id/SettingsB"
+        android:id="@+id/StopMonitorA"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/RouteListA"
+        android:layout_alignTop="@+id/MapA"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/MapA"
+        android:layout_below="@+id/TripPlannerA"
+        android:layout_alignLeft="@+id/TripPlannerA"
+        android:layout_alignStart="@+id/TripPlannerA"
+        android:layout_marginTop="56dp"
+        android:adjustViewBounds="false" />
+
+    <ImageButton
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/FavoritesA"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="37dp" />
+
+    <ImageButton
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/SettingsA"
+        android:layout_alignTop="@+id/FavoritesA"
+        android:layout_alignLeft="@+id/MapA"
+        android:layout_alignStart="@+id/MapA" />
 
 </RelativeLayout>

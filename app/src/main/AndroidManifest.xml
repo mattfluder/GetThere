@@ -89,6 +89,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".Settings"
+            android:label="settings">
+            <!--android:parentActivityName=".MainMenu" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.capstone.transit.trans_it.MainMenu" /> -->
+            <intent-filter>
+                <action android:name="com.capstone.transit.trans_it.Settings" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
