@@ -37,9 +37,9 @@ public class StopListActivity extends ActionBarActivity {
     private ExpandableListAdapter listAdapter;
     private ExpandableListView expListView;
     private List<String> listDataHeader;
-    private HashMap<String, List<String>> listDataChild;
+    private HashMap<String, List<StopTimes>> listDataChild;
     private List<String> routesServicing;
-    private List<String> listRouteTimes;
+    private List<StopTimes> listRouteTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +135,10 @@ public class StopListActivity extends ActionBarActivity {
     private void updateTimesList(){
 
         final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
+        StopTimes currentStopTime;
 
         listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataChild = new HashMap<String, List<StopTimes>>();
 
         listAdapter = new ExpandableListAdapter(this,listDataHeader,listDataChild);
         expListView.setAdapter(listAdapter);
@@ -193,7 +194,7 @@ public class StopListActivity extends ActionBarActivity {
 
         if (realData != null) {
             for (int i = 0; i < listDataHeader.size(); i++) {
-                listRouteTimes = new ArrayList<String>();
+                listRouteTimes = new ArrayList<>();
                 for (FeedEntity entity : realData.getEntityList()) {
                     if (!entity.hasTripUpdate()) continue;
                     TripUpdate trip = entity.getTripUpdate();
