@@ -27,7 +27,7 @@ public class StopTimes {
             else timeColor = Color.GREEN;
         }
         else timeColor = Color.BLACK;
-        toDisplay = time + " " + vehicleNumber;
+        toDisplay = time + " Vehicle:" + vehicleNumber;
     }
 
     public void setTime (String inTime){

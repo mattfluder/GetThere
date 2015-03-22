@@ -210,13 +210,14 @@ public class StopListActivity extends ActionBarActivity {
                             Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
                             SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
                             String formattedDate = sdf.format(date);
-                            listRouteTimes.add(formattedDate);
+                            currentStopTime = new StopTimes(formattedDate, routeID, trip.getTrip().getTripId(),true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel());
+                            listRouteTimes.add(currentStopTime);
                             System.out.println(String.valueOf(stopEventArrival.getTime()));
                         }
                     }
                 }
                 System.out.println("Adding to List");
-                if (listRouteTimes.isEmpty())listRouteTimes.add("");
+                if (listRouteTimes.isEmpty())listRouteTimes.add(null);
                 listDataChild.put(listDataHeader.get(i),listRouteTimes);
                 System.out.println("Next Loop");
             }
