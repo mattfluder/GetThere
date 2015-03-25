@@ -32,9 +32,9 @@ public class Settings extends ActionBarActivity {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setSmallIcon(R.drawable.logocapstone)
+                        .setContentTitle("Notification Bitchessssss")
+                        .setContentText("Open the fucking app by clicking this");
 
         Intent resultIntent = new Intent(this,MainMenu.class);
 // Because clicking the notification opens a new ("special") activity, there's
