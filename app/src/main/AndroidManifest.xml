@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -21,7 +22,13 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
+
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -32,6 +39,8 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <uses-library android:name="com.google.android.maps" />
 
         <activity
             android:name=".SplashActivity"
@@ -78,13 +87,34 @@
 
         <activity
             android:name=".StopListActivity"
-            android:label="Stop Monitor">
-            <!--android:parentActivityName=".MainMenu" >
+            android:label="Stop Monitor" >
+
+            <!--
+            android:parentActivityName=".MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.capstone.transit.trans_it.MainMenu" /> -->
+                android:value="com.capstone.transit.trans_it.MainMenu" />
+            -->
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.StopListActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TripPlannerActivity"
+            android:label="@string/title_activity_trip_planner" >
+            <intent-filter>
+                <action android:name="com.capstone.transit.trans_it.TRIPPLANNERACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TripDisplayActivity"
+            android:label="@string/title_activity_trip_display" >
+            <intent-filter>
+                <action android:name="com.capstone.transit.trans_it.TRIPDISPLAYACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

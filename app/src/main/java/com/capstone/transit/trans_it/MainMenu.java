@@ -24,6 +24,7 @@ public class MainMenu extends ActionBarActivity {
 
         Button Map = (Button) findViewById(R.id.MapB);
         final Button StopList = (Button) findViewById(R.id.StopListB);
+        final Button TripPlanner = (Button) findViewById(R.id.TripPlannerB);
 
         Map.setOnClickListener(new View.OnClickListener() {
 
@@ -31,6 +32,15 @@ public class MainMenu extends ActionBarActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.MAPACTIVITY"));
+            }
+        });
+
+        TripPlanner.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.TRIPPLANNERACTIVITY"));
             }
         });
 
