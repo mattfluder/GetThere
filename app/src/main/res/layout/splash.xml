@@ -8,6 +8,6 @@
         android:layout_height="fill_parent"
         android:id="@+id/imageView"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/logocapstone"
+        android:src="@drawable/logocapsplash"
         android:scaleType="fitXY" />
 </LinearLayout>
