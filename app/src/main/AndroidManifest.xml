@@ -21,6 +21,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -78,13 +83,25 @@
 
         <activity
             android:name=".StopListActivity"
-            android:label="Stop Monitor">
-            <!--android:parentActivityName=".MainMenu" >
+            android:label="Stop Monitor" >
+
+            <!--
+            android:parentActivityName=".MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.capstone.transit.trans_it.MainMenu" /> -->
+                android:value="com.capstone.transit.trans_it.MainMenu" />
+            -->
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.StopListActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TripPlannerActivity"
+            android:label="@string/title_activity_trip_planner" >
+            <intent-filter>
+                <action android:name="com.capstone.transit.trans_it.TRIPPLANNERACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

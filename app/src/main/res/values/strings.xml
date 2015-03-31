@@ -2,9 +2,13 @@
 <resources>
 
     <string name="app_name">Trans-it</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="load_directions">Load Directions</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_stop_list">Stop List</string>
+    <string name="title_activity_trip_planner">TripPlannerActivity</string>
 
 </resources>
