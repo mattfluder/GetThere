@@ -73,7 +73,7 @@ public class TripDisplayActivity extends FragmentActivity {
         String sensor = "sensor=false";
 
         // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String parameters = str_origin+"&"+str_dest+"&mode=transit"+"&"+sensor;
 
         // Output format
         String output = "json";
@@ -322,5 +322,7 @@ public class TripDisplayActivity extends FragmentActivity {
 
         mMap.addMarker(new MarkerOptions().position(new LatLng(StartCoordinates[0], StartCoordinates[1])).title("Start Address"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(EndCoordinates[0], EndCoordinates[1])).title("End Address"));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(StartCoordinates[0], StartCoordinates[1]),13.0f));
     }
 }
