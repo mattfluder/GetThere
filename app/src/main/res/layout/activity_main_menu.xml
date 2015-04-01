@@ -9,21 +9,23 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:id="@+id/TripPlannerA"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:src="@drawable/tripplanner"
         android:scaleType="fitCenter"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:id="@+id/StopMonitorA"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:src="@drawable/stopmonitor"
         android:scaleType="fitCenter"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="125dp"
@@ -32,9 +34,10 @@
         android:scaleType="fitCenter"
         android:src="@drawable/routelist"
         android:background="@null"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/StopMonitor"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp" />
 
     <ImageButton
         android:layout_width="125dp"
@@ -55,9 +58,10 @@
         android:scaleType="fitXY"
         android:src="@drawable/favourites"
         android:background="@null"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/RouteList"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="39dp" />
 
     <ImageButton
         android:layout_width="125dp"
@@ -69,5 +73,83 @@
         android:scaleType="fitXY"
         android:src="@drawable/settings"
         android:background="@null" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Stop Monitor"
+        android:id="@+id/StopMonitor"
+        android:layout_below="@+id/StopMonitorA"
+        android:layout_alignRight="@+id/StopMonitorA"
+        android:layout_alignEnd="@+id/StopMonitorA"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Trip Planner"
+        android:id="@+id/TripPlanner"
+        android:paddingLeft="14dp"
+        android:layout_below="@+id/TripPlannerA"
+        android:layout_alignLeft="@+id/TripPlannerA"
+        android:layout_alignStart="@+id/TripPlannerA"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Route List"
+        android:id="@+id/RouteList"
+        android:paddingLeft="21dp"
+        android:layout_below="@+id/RouteListA"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/RouteListA"
+        android:layout_alignEnd="@+id/RouteListA" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Map"
+        android:id="@+id/Map"
+        android:paddingLeft="45dp"
+        android:layout_below="@+id/MapA"
+        android:layout_alignLeft="@+id/MapA"
+        android:layout_alignStart="@+id/MapA"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Favourites"
+        android:id="@+id/Favourites"
+        android:paddingLeft="19dp"
+        android:layout_below="@+id/FavoritesA"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/FavoritesA"
+        android:layout_alignEnd="@+id/FavoritesA" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Settings"
+        android:id="@+id/Settings"
+        android:paddingLeft="30dp"
+        android:layout_below="@+id/SettingsA"
+        android:layout_alignLeft="@+id/SettingsA"
+        android:layout_alignStart="@+id/SettingsA"
+        android:layout_alignRight="@+id/SettingsA"
+        android:layout_alignEnd="@+id/SettingsA" />
 
 </RelativeLayout>
