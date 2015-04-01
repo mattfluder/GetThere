@@ -58,7 +58,7 @@
         </activity>
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_map"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.MAPACTIVITY" />
@@ -74,7 +74,7 @@
 
         <activity
             android:name=".StopListActivity"
-            android:label="Stop Monitor"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <!--android:parentActivityName=".MainMenu" >
             <meta-data
@@ -88,7 +88,7 @@
         </activity>
         <activity
             android:name=".TripPlannerActivity"
-            android:label="@string/title_activity_trip_planner"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPPLANNERACTIVITY" />
@@ -98,7 +98,7 @@
         </activity>
         <activity
             android:name=".TripDisplayActivity"
-            android:label="@string/title_activity_trip_display"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPDISPLAYACTIVITY" />
@@ -109,7 +109,7 @@
 
         <activity
             android:name=".Settings"
-            android:label="Settings"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <!--android:parentActivityName=".MainMenu" >
             <meta-data
