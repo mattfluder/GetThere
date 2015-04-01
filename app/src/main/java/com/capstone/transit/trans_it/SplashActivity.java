@@ -21,6 +21,7 @@ public class SplashActivity extends Activity{
         Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
         fetchTimesIntent.putExtra("receiver",new timesReceiver(new Handler()));
         startService(fetchTimesIntent);
+
     }
 
 

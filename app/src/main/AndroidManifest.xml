@@ -15,17 +15,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <!--
- The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but are recommended.
-    -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
 
@@ -44,7 +38,8 @@
 
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,7 +48,8 @@
         </activity>
         <activity
             android:name=".MainMenu"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.MAINMENU" />
 
@@ -62,19 +58,10 @@
         </activity>
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_map" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.MAPACTIVITY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".infoWindowClickActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog" >
-            <intent-filter>
-                <action android:name="com.capstone.transit.trans_it.INFOWINDOWCLICKACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -87,7 +74,8 @@
 
         <activity
             android:name=".StopListActivity"
-            android:label="Stop Monitor">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <!--android:parentActivityName=".MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -100,7 +88,8 @@
         </activity>
         <activity
             android:name=".TripPlannerActivity"
-            android:label="@string/title_activity_trip_planner" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPPLANNERACTIVITY" />
 
@@ -109,7 +98,8 @@
         </activity>
         <activity
             android:name=".TripDisplayActivity"
-            android:label="@string/title_activity_trip_display" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPDISPLAYACTIVITY" />
 
@@ -119,7 +109,8 @@
 
         <activity
             android:name=".Settings"
-            android:label="settings">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <!--android:parentActivityName=".MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

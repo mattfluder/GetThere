@@ -29,37 +29,35 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:id="@+id/RouteListA"
-        android:layout_alignTop="@+id/MapA"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:scaleType="fitCenter"
         android:src="@drawable/routelist"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:id="@+id/MapA"
-        android:layout_below="@+id/TripPlannerA"
-        android:layout_alignLeft="@+id/TripPlannerA"
-        android:layout_alignStart="@+id/TripPlannerA"
-        android:layout_marginTop="56dp"
         android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:src="@drawable/map"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_alignTop="@+id/RouteListA"
+        android:layout_alignLeft="@+id/TripPlannerA"
+        android:layout_alignStart="@+id/TripPlannerA" />
 
     <ImageButton
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:id="@+id/FavoritesA"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="37dp"
         android:scaleType="fitXY"
         android:src="@drawable/favourites"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="125dp"
