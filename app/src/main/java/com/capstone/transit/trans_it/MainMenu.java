@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,16 +16,33 @@ import java.io.InputStreamReader;
 
 public class MainMenu extends ActionBarActivity {
 
+    // Setting up button references
+   private ImageButton Settings;
+   private ImageButton Map;
+   private ImageButton StopList;
+   private ImageButton TripPlanner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        Settings = (ImageButton) findViewById(R.id.SettingsA);
+        Map = (ImageButton) findViewById(R.id.MapA);
+        StopList = (ImageButton) findViewById(R.id.StopMonitorA);
+        TripPlanner = (ImageButton) findViewById(R.id.TripPlannerA);
 
-     // Setting up button references
+        Settings.setOnClickListener(new View.OnClickListener() {
 
-        Button Map = (Button) findViewById(R.id.MapB);
-        final Button StopList = (Button) findViewById(R.id.StopListB);
-        final Button TripPlanner = (Button) findViewById(R.id.TripPlannerB);
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.Settings"));
+
+               if(Settings.isPressed())
+                  Settings.setImageResource(R.drawable.settingspressed);
+              //  else
+                //    settings.setImageResource(R.drawable.settings);
+            }
+        });
 
         Map.setOnClickListener(new View.OnClickListener() {
 
@@ -32,6 +50,10 @@ public class MainMenu extends ActionBarActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.MAPACTIVITY"));
+              if(Map.isPressed())
+                   Map.setImageResource(R.drawable.mappressed);
+               // else
+                //    Map.setImageResource(R.drawable.map);
             }
         });
 
@@ -50,8 +72,20 @@ public class MainMenu extends ActionBarActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.StopListActivity"));
+               if(StopList.isPressed())
+                    StopList.setImageResource(R.drawable.stopmonitorpressed);
+                //else
+                //    StopList.setImageResource(R.drawable.stopmonitor);
             }
         });
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        Map.setImageResource(R.drawable.map);
+        Settings.setImageResource(R.drawable.settings);
+        StopList.setImageResource(R.drawable.stopmonitor);
     }
 
     @Override
