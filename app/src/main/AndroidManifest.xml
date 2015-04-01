@@ -87,14 +87,11 @@
 
         <activity
             android:name=".StopListActivity"
-            android:label="Stop Monitor" >
-
-            <!--
-            android:parentActivityName=".MainMenu" >
+            android:label="Stop Monitor">
+            <!--android:parentActivityName=".MainMenu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.capstone.transit.trans_it.MainMenu" />
-            -->
+                android:value="com.capstone.transit.trans_it.MainMenu" /> -->
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.StopListActivity" />
 
@@ -115,6 +112,20 @@
             android:label="@string/title_activity_trip_display" >
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPDISPLAYACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Settings"
+            android:label="settings">
+            <!--android:parentActivityName=".MainMenu" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.capstone.transit.trans_it.MainMenu" /> -->
+            <intent-filter>
+                <action android:name="com.capstone.transit.trans_it.Settings" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
