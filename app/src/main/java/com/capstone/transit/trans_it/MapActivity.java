@@ -34,7 +34,6 @@ public class MapActivity extends FragmentActivity {
         setUpMapIfNeeded();
         testCameraChange();
         infoWindowClick();
-        acquireUserLocation();
 
         //Map Activity Done
 
@@ -58,21 +57,6 @@ public class MapActivity extends FragmentActivity {
                 mMap.setMyLocationEnabled(true);
             }
         }
-    }
-
-    public Location acquireUserLocation(){
-
-        //double[] myLatLon = new double[2];
-
-        Location myLocation = mMap.getMyLocation();
-
-        //double myLat = myLocation.getLatitude();
-        //myLatLon[1] = myLocation.getLongitude();
-
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(myLatLon[0], myLatLon[1])).title("Me"));
-
-        return myLocation;
-
     }
 
     public ArrayList<String> createLatArrayList(){
@@ -99,7 +83,8 @@ public class MapActivity extends FragmentActivity {
                 }
                 count++;
             }
-
+            //System.out.print(LatV.get(1));
+            System.out.print("Got here");
             br.close();
         }
         catch (IOException e1){
@@ -133,6 +118,7 @@ public class MapActivity extends FragmentActivity {
                 }
                 count++;
             }
+            System.out.print(LonV.get(1));
 
             br.close();
         }
@@ -317,7 +303,6 @@ public class MapActivity extends FragmentActivity {
             public void onInfoWindowClick(Marker marker) {
 
                 Intent intent = new Intent(getBaseContext(), StopListActivity.class);
-                //intent.putExtra("STOP_NAME", marker.getTitle()); // Passing stop name to next activity
                 intent.putExtra("STOP_CODE", marker.getSnippet()); // Passing stop ID to next activity
                 startActivity(intent);
             }

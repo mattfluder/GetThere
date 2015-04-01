@@ -1,5 +1,6 @@
 package com.capstone.transit.trans_it;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -19,10 +20,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     private Context _context;
     private List<String> _listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<String>> _listDataChild;
+    private HashMap<String, List<StopTimes>> _listDataChild;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+                                 HashMap<String, List<StopTimes>> listChildData) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
@@ -43,7 +44,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final String childText = (String) getChild(groupPosition, childPosition);
+        final StopTimes childStopTimes = (StopTimes) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -53,8 +54,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
-
-        txtListChild.setText(childText);
+        if(childStopTimes == null) {
+            txtListChild.setText("Not Available");
+            txtListChild.setTextColor(Color.rgb(204,204,0));
+        }
+        else {
+            txtListChild.setTextColor(childStopTimes.getTimeColor());
+            txtListChild.setText(childStopTimes.getToDisplay());
+        }
         return convertView;
     }
 

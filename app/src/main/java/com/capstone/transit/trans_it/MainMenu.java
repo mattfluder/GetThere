@@ -55,6 +55,15 @@ public class MainMenu extends ActionBarActivity {
             }
         });
 
+        TripPlanner.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                startActivity(new Intent("com.capstone.transit.trans_it.TRIPPLANNERACTIVITY"));
+            }
+        });
+
         StopList.setOnClickListener(new View.OnClickListener() {
 
             @Override
