@@ -20,6 +20,7 @@ public class MainMenu extends ActionBarActivity {
    private ImageButton Settings;
    private ImageButton Map;
    private ImageButton StopList;
+   private ImageButton TripPlanner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +28,7 @@ public class MainMenu extends ActionBarActivity {
         Settings = (ImageButton) findViewById(R.id.SettingsA);
         Map = (ImageButton) findViewById(R.id.MapA);
         StopList = (ImageButton) findViewById(R.id.StopMonitorA);
+        TripPlanner = (ImageButton) findViewById(R.id.TripPlannerA);
 
         Settings.setOnClickListener(new View.OnClickListener() {
 
