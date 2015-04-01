@@ -37,7 +37,7 @@
         android:layout_below="@+id/StopMonitor"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="43dp" />
 
     <ImageButton
         android:layout_width="125dp"
@@ -109,9 +109,7 @@
         android:paddingLeft="21dp"
         android:layout_below="@+id/RouteListA"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/RouteListA"
-        android:layout_alignEnd="@+id/RouteListA" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
