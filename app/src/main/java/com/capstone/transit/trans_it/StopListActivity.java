@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,24 +75,35 @@ public class StopListActivity extends ActionBarActivity {
             }
         });
 
-        GoButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                InputMethodManager inputManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                startService(fetchTimesIntent);
-                String stop_code = stopCodeEdit.getText().toString();
-                ImageView favButton = (ImageView) findViewById(R.id.favButton);
-                if (FavoritesManager.isFavoriteStop(stop_code)) {
+        stopCodeEdit.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if (FavoritesManager.isFavoriteStop(stopCodeEdit.getText().toString())) {
                     favButton.setImageResource(R.drawable.fav_yellow);
                 } else {
                     favButton.setImageResource(R.drawable.fav_grey);
                 }
             }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
+
+
+                GoButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        InputMethodManager inputManager = (InputMethodManager)
+                                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        startService(fetchTimesIntent);
+                        String stop_code = stopCodeEdit.getText().toString();
+                    }
+                });
 
         favButton.setOnClickListener(favButtonClickListener);
 
