@@ -1,12 +1,14 @@
 package com.capstone.transit.trans_it;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,9 +18,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.transit.realtime.GtfsRealtime.*;
+import com.google.transit.realtime.GtfsRealtime.FeedEntity;
+import com.google.transit.realtime.GtfsRealtime.FeedMessage;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -48,6 +53,7 @@ public class StopListActivity extends ActionBarActivity {
 
         final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
         final Button GoButton = (Button) findViewById(R.id.goButton);
+        final ImageView favButton = (ImageView) findViewById(R.id.favButton);
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
         final Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
@@ -75,14 +81,24 @@ public class StopListActivity extends ActionBarActivity {
 
                 inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 startService(fetchTimesIntent);
+                String stop_code = stopCodeEdit.getText().toString();
+                ImageView favButton = (ImageView) findViewById(R.id.favButton);
+                if (FavoritesManager.isFavoriteStop(stop_code)) {
+                    favButton.setImageResource(R.drawable.fav_yellow);
+                } else {
+                    favButton.setImageResource(R.drawable.fav_grey);
+                }
             }
         });
+
+        favButton.setOnClickListener(favButtonClickListener);
 
         if (intentStopCode != null){
             stopCodeEdit.setText(intentStopCode);
             GoButton.performClick();
         }
     }
+    //ONCREATE END==================================
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -235,4 +251,40 @@ public class StopListActivity extends ActionBarActivity {
             updateTimesList();
         }
     }
+
+
+    //FAVORITES METHODS=======================================
+    final View.OnClickListener favButtonClickListener = new View.OnClickListener() {
+        @Override
+
+        public void onClick(final View v) {
+            final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
+            final String stop_code = stopCodeEdit.getText().toString();
+            if (FavoritesManager.isFavoriteStop(stop_code)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
+                builder.setMessage("Remove " + stop_code +" from favorites?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //DELETE FROM FAVORITES HERE.
+                                FavoritesManager.deleteFavoriteStop(stop_code, StopListActivity.this);
+                                ((ImageView) v).setImageResource(R.drawable.fav_grey);
+                            }
+                        });
+                builder.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } else {
+                FavoritesManager.addFavoriteStop(stop_code, getApplication());
+                ((ImageView) v).setImageResource(R.drawable.fav_yellow);
+            }
+        }
+    };
+
 }
