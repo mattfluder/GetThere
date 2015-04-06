@@ -24,7 +24,7 @@ public class StopTimes {
             if (delay > 180) {
                 timeColor = Color.RED;
             }
-            else timeColor = Color.GREEN;
+            else timeColor = Color.rgb(0,153,0);
         }
         else timeColor = Color.BLACK;
         toDisplay = time + " Vehicle:" + vehicleNumber;

@@ -18,10 +18,25 @@ public class SplashActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
-        fetchTimesIntent.putExtra("receiver",new timesReceiver(new Handler()));
-        startService(fetchTimesIntent);
+        //Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
+        //fetchTimesIntent.putExtra("receiver",new timesReceiver(new Handler()));
+        //startService(fetchTimesIntent);
 
+        Thread logoTimer = new Thread(){
+            public void run(){
+                try{
+                    sleep(2000);
+                    startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                finally{
+                    finish();
+                }
+            }
+        };
+        logoTimer.start();
     }
 
 

@@ -281,7 +281,7 @@ public class MapActivity extends FragmentActivity {
 
             @Override
             public void onCameraChange( CameraPosition cameraPosition ) {
-                if(mMap.getCameraPosition().zoom >= 16){   // If zoomed in sufficiently, sets the visibility to true
+                if(mMap.getCameraPosition().zoom >= 15){   // If zoomed in sufficiently, sets the visibility to true
                     for(int a=0;a<size;a++){
                         markers.get(a).setVisible(true);
                     }
