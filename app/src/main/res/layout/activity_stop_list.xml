@@ -32,8 +32,7 @@
                 android:imeOptions="actionDone"
                 android:layout_alignTop="@+id/textView"
                 android:layout_toRightOf="@+id/textView"
-                android:inputType="number"
-                android:windowSoftInputMode="stateAlwaysHidden" />
+                android:inputType="number" />
 
             <Button
                 android:layout_width="wrap_content"

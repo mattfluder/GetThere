@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class FavoritesActivity extends ActionBarActivity {
 
         createGroupList();
 
+        HashMap<String, List<String>> collections = new HashMap<String, List<String>>();
         stop_child_list = new ArrayList<String>();
         trip_child_list = new ArrayList<String>();
 
@@ -111,6 +113,8 @@ change trip planner to start with the info from intent
 add second piece of info, user_identifier
 
 Hide dialpad when coming from another activity.
+
+create shortcut when installing
 
 
  */
