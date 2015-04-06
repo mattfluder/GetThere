@@ -1,73 +1,179 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainMenu">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainMenu">
 
-    <ImageButton
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:id="@+id/TripPlannerA"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/tripplanner"
-        android:scaleType="fitCenter"
-        android:background="@null" />
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
 
-    <ImageButton
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:id="@+id/StopMonitorA"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/stopmonitor"
-        android:scaleType="fitCenter"
-        android:background="@null" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
 
-    <ImageButton
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:id="@+id/RouteListA"
-        android:scaleType="fitCenter"
-        android:src="@drawable/routelist"
-        android:background="@null"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:id="@+id/StopMonitorA"
+                android:src="@drawable/stopmonitor"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
 
-    <ImageButton
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:id="@+id/MapA"
-        android:adjustViewBounds="false"
-        android:scaleType="fitXY"
-        android:src="@drawable/map"
-        android:background="@null"
-        android:layout_alignTop="@+id/RouteListA"
-        android:layout_alignLeft="@+id/TripPlannerA"
-        android:layout_alignStart="@+id/TripPlannerA" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Bus Check"
+                android:id="@+id/StopMonitor"
+                android:layout_gravity="center" />
 
-    <ImageButton
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:id="@+id/FavoritesA"
-        android:scaleType="fitXY"
-        android:src="@drawable/favourites"
-        android:background="@null"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        </LinearLayout>
 
-    <ImageButton
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:id="@+id/SettingsA"
-        android:layout_alignTop="@+id/FavoritesA"
-        android:layout_alignLeft="@+id/MapA"
-        android:layout_alignStart="@+id/MapA"
-        android:scaleType="fitXY"
-        android:src="@drawable/settings"
-        android:background="@null" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
 
-</RelativeLayout>
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:id="@+id/TripPlannerA"
+                android:src="@drawable/tripplanner"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Trip Planner"
+                android:id="@+id/TripPlanner"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:id="@+id/RouteListA"
+                android:scaleType="fitCenter"
+                android:src="@drawable/routelist"
+                android:background="@null"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Route List"
+                android:id="@+id/RouteList"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:id="@+id/MapA"
+                android:adjustViewBounds="false"
+                android:scaleType="fitCenter"
+                android:src="@drawable/map"
+                android:background="@null"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Map"
+                android:id="@+id/Map"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:id="@+id/FavoritesA"
+                android:scaleType="fitCenter"
+                android:src="@drawable/favourites"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Favourites"
+                android:id="@+id/Favourites"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:id="@+id/SettingsA"
+                android:scaleType="fitCenter"
+                android:src="@drawable/settings"
+                android:background="@null"
+                android:layout_weight="1"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Settings"
+                android:id="@+id/Settings"
+                android:layout_gravity="center" />
+        </LinearLayout>
+    </TableRow>
+</TableLayout>
