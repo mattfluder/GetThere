@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
@@ -259,8 +260,10 @@ public class StopListActivity extends ActionBarActivity {
 
         public void onClick(final View v) {
             final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
-            final String stop_code = stopCodeEdit.getText().toString();
+            final String stop_code = stopCodeEdit.getText().toString().split(" ")[0];
+
             if (FavoritesManager.isFavoriteStop(stop_code)) {
+                //REMOVE THE FAVORITE
                 AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
                 builder.setMessage("Remove " + stop_code +" from favorites?");
                 builder.setCancelable(false);
@@ -270,6 +273,8 @@ public class StopListActivity extends ActionBarActivity {
                                 //DELETE FROM FAVORITES HERE.
                                 FavoritesManager.deleteFavoriteStop(stop_code, StopListActivity.this);
                                 ((ImageView) v).setImageResource(R.drawable.fav_grey);
+                                Toast toast = Toast.makeText(StopListActivity.this, "Stop Removed from Favorites", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                         });
                 builder.setNegativeButton("No",
@@ -281,8 +286,43 @@ public class StopListActivity extends ActionBarActivity {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
-                FavoritesManager.addFavoriteStop(stop_code, getApplication());
-                ((ImageView) v).setImageResource(R.drawable.fav_yellow);
+                //ADD THE FAVORITE
+                AlertDialog.Builder alert = new AlertDialog.Builder(StopListActivity.this);
+
+                alert.setTitle("Add To Favorites");
+                alert.setMessage("Enter a small description/name to identify stop " + stop_code + ":");
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(StopListActivity.this);
+                input.setMaxLines(1);
+                alert.setView(input);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String description = input.getText().toString();
+                        // Do something with value!
+                        FavoritesManager.addFavoriteStop(stop_code, description, getApplication());
+                        ((ImageView) v).setImageResource(R.drawable.fav_yellow);
+
+                        Toast toast = Toast.makeText(StopListActivity.this, "Stop Added to Favorites", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                        //Trying to hide the dial pad afterwards. It worked once. Never again.
+                        InputMethodManager inputManager = (InputMethodManager)
+                                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        inputManager.hideSoftInputFromWindow(stopCodeEdit.getApplicationWindowToken(), 0);
+
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+
+                alert.show();
             }
         }
     };

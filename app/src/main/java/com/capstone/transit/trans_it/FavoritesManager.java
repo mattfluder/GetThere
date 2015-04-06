@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 /**
@@ -22,6 +23,7 @@ public final class FavoritesManager {
     final private static String TRIPFILENAME = "favorite_trips";
     public static TreeSet<String> stop_set = new TreeSet<>();
     public static TreeSet<String> trip_set = new TreeSet<>();
+    public static HashMap<String, String> stop_descriptions = new HashMap<>();
 
     private static boolean loaded = false;
     private static boolean stop_list_updated = false;
@@ -30,6 +32,7 @@ public final class FavoritesManager {
     public static void deleteFavoriteStop(String value, Context ctx) {
 
         stop_set.remove(value);
+        stop_descriptions.remove(value);
         stop_list_updated = true;
         saveFavorites(ctx);
 
@@ -53,11 +56,29 @@ public final class FavoritesManager {
         }
 
         stop_set.add(stop_code);
+        stop_descriptions.put(stop_code, "");
         stop_list_updated = true;
         saveFavorites(ctx);
 
     }
-    public static void addFavoriteTrip(Context ctx, String trip_info) {
+
+    public static void addFavoriteStop(String stop_code, String description, Context ctx) {
+        if (!loaded) {
+            LoadFavorites(ctx);
+        }
+
+        /*
+        tring s = "<b>Bolded text</b>, <i>italic text</i>, even <u>underlined</u>!"
+        TextView tv = (TextView)findViewById(R.id.THE_TEXTVIEW_ID);
+        tv.setText(Html.fromHtml(s));
+        */
+        stop_set.add(stop_code);
+        stop_descriptions.put(stop_code, description);
+        stop_list_updated = true;
+        saveFavorites(ctx);
+
+    }
+    public static void addFavoriteTrip(String trip_info, Context ctx) {
         if (!loaded) {
             LoadFavorites(ctx);
         }
@@ -66,6 +87,18 @@ public final class FavoritesManager {
         trip_list_updated = true;
         saveFavorites(ctx);
     }
+
+    public static void addFavoriteTrip(String trip_info, String name, Context ctx) {
+        if (!loaded) {
+            LoadFavorites(ctx);
+        }
+        //name this  trip! ex. To Grandma's
+
+        trip_set.add(trip_info);
+        trip_list_updated = true;
+        saveFavorites(ctx);
+    }
+
 
     public static void saveFavorites(Context ctx) {
 
@@ -78,6 +111,7 @@ public final class FavoritesManager {
 
                 for (String value : stop_set) {
                     fos.write((value + "\n").getBytes());
+                    fos.write((stop_descriptions.get(value) + "\n").getBytes());
                 }
 
 
@@ -113,13 +147,17 @@ public final class FavoritesManager {
     public static void LoadFavorites(Context ctx) {
         if (!loaded) {
             Log.d("ME TALKING: ", "LOADING THINGS NOW/AGAIN");
+            String description;
             try {
                 FileInputStream fis = ctx.openFileInput(STOPFILENAME);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
-                for (String line; (line = reader.readLine()) != null; ) {
+                for (String stop_code; (stop_code = reader.readLine()) != null; ) {
                     // process the line.
-                    stop_set.add(line);
+                    //always an even number of lines.
+                    stop_set.add(stop_code);
+                    description = reader.readLine();
+                    stop_descriptions.put(stop_code, description);
                 }
 
                 fis.close();

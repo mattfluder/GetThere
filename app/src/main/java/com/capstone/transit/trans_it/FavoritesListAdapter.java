@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.fav_stop_child, null);
             item = (TextView) convertView.findViewById(R.id.stop_child);
             ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
-            item.setText(child);
+            item.setText(Html.fromHtml(child + " - <i>" + FavoritesManager.stop_descriptions.get(child) + "</i>"));
             delete.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
@@ -78,6 +80,8 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
                                     FavoritesManager.deleteFavoriteStop(child.get(childPosition), context);
                                     child.remove(childPosition);
                                     notifyDataSetChanged();
+                                    Toast toast = Toast.makeText(context, "Stop Removed from Favorites", Toast.LENGTH_SHORT);
+                                    toast.show();
                                 }
                             });
                     builder.setNegativeButton("No",

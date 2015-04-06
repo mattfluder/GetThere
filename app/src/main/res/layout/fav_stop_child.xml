@@ -20,6 +20,7 @@
         android:src="@drawable/fav_red"
         android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:contentDescription="Delete Button"/>
 
 </RelativeLayout>
