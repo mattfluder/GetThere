@@ -1,6 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -33,7 +35,7 @@
                 android:inputType="number" />
 
             <Button
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight= "1"
                 android:layout_height="wrap_content"
                 android:text="Go"
@@ -41,6 +43,15 @@
                 android:layout_alignTop="@+id/editText"
                 android:layout_toRightOf="@+id/editText"
                 android:layout_toEndOf="@+id/editText" />
+
+            <ImageView
+                android:id="@+id/favButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignTop="@+id/goButton"
+                android:layout_toRightOf="@+id/goButton"
+                android:layout_toEndOf="@+id/gobutton"
+                android:src="@drawable/fav_grey"/>
 
         </LinearLayout>
 

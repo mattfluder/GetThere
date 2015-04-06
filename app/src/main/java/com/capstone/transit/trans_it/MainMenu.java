@@ -1,17 +1,12 @@
 package com.capstone.transit.trans_it;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 
 public class MainMenu extends ActionBarActivity {
@@ -21,6 +16,7 @@ public class MainMenu extends ActionBarActivity {
    private ImageButton Map;
    private ImageButton StopList;
    private ImageButton TripPlanner;
+   private ImageButton Favorites;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +25,12 @@ public class MainMenu extends ActionBarActivity {
         Map = (ImageButton) findViewById(R.id.MapA);
         StopList = (ImageButton) findViewById(R.id.StopMonitorA);
         TripPlanner = (ImageButton) findViewById(R.id.TripPlannerA);
+        Favorites = (ImageButton) findViewById(R.id.FavoritesA);
 
         Settings.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.Settings"));
 
                if(Settings.isPressed())
@@ -48,7 +44,6 @@ public class MainMenu extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.MAPACTIVITY"));
               if(Map.isPressed())
                    Map.setImageResource(R.drawable.mappressed);
@@ -61,7 +56,7 @@ public class MainMenu extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+                //The caps lock activity names are kind of hideous TOM PLEASE
                 startActivity(new Intent("com.capstone.transit.trans_it.TRIPPLANNERACTIVITY"));
             }
         });
@@ -70,12 +65,20 @@ public class MainMenu extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 startActivity(new Intent("com.capstone.transit.trans_it.StopListActivity"));
                if(StopList.isPressed())
                     StopList.setImageResource(R.drawable.stopmonitorpressed);
                 //else
                 //    StopList.setImageResource(R.drawable.stopmonitor);
+            }
+        });
+
+        Favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent("com.capstone.transit.trans_it.FavoritesActivity"));
+                if(Favorites.isPressed())
+                    Favorites.setImageResource(R.drawable.favouritespressed);
             }
         });
     }
@@ -86,6 +89,7 @@ public class MainMenu extends ActionBarActivity {
         Map.setImageResource(R.drawable.map);
         Settings.setImageResource(R.drawable.settings);
         StopList.setImageResource(R.drawable.stopmonitor);
+        Favorites.setImageResource(R.drawable.favourites);
     }
 
     @Override

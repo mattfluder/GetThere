@@ -1,12 +1,16 @@
 package com.capstone.transit.trans_it;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,9 +20,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.transit.realtime.GtfsRealtime.*;
+import com.google.transit.realtime.GtfsRealtime.FeedEntity;
+import com.google.transit.realtime.GtfsRealtime.FeedMessage;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -48,6 +56,7 @@ public class StopListActivity extends ActionBarActivity {
 
         final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
         final Button GoButton = (Button) findViewById(R.id.goButton);
+        final ImageView favButton = (ImageView) findViewById(R.id.favButton);
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
         final Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
@@ -66,23 +75,44 @@ public class StopListActivity extends ActionBarActivity {
             }
         });
 
-        GoButton.setOnClickListener(new View.OnClickListener() {
+        stopCodeEdit.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if (FavoritesManager.isFavoriteStop(stopCodeEdit.getText().toString())) {
+                    favButton.setImageResource(R.drawable.fav_yellow);
+                } else {
+                    favButton.setImageResource(R.drawable.fav_grey);
+                }
+            }
 
-            @Override
-            public void onClick(View v) {
-                InputMethodManager inputManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                startService(fetchTimesIntent);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+
+
+                GoButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        InputMethodManager inputManager = (InputMethodManager)
+                                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        startService(fetchTimesIntent);
+                        String stop_code = stopCodeEdit.getText().toString();
+                    }
+                });
+
+        favButton.setOnClickListener(favButtonClickListener);
 
         if (intentStopCode != null){
             stopCodeEdit.setText(intentStopCode);
             GoButton.performClick();
         }
     }
+    //ONCREATE END==================================
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -235,4 +265,79 @@ public class StopListActivity extends ActionBarActivity {
             updateTimesList();
         }
     }
+
+
+    //FAVORITES METHODS=======================================
+    final View.OnClickListener favButtonClickListener = new View.OnClickListener() {
+        @Override
+
+        public void onClick(final View v) {
+            final EditText stopCodeEdit = (EditText)findViewById(R.id.editText);
+            final String stop_code = stopCodeEdit.getText().toString().split(" ")[0];
+
+            if (FavoritesManager.isFavoriteStop(stop_code)) {
+                //REMOVE THE FAVORITE
+                AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
+                builder.setMessage("Remove " + stop_code +" from favorites?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //DELETE FROM FAVORITES HERE.
+                                FavoritesManager.deleteFavoriteStop(stop_code, StopListActivity.this);
+                                ((ImageView) v).setImageResource(R.drawable.fav_grey);
+                                Toast toast = Toast.makeText(StopListActivity.this, "Stop Removed from Favorites", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        });
+                builder.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } else {
+                //ADD THE FAVORITE
+                AlertDialog.Builder alert = new AlertDialog.Builder(StopListActivity.this);
+
+                alert.setTitle("Add To Favorites");
+                alert.setMessage("Enter a small description/name to identify stop " + stop_code + ":");
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(StopListActivity.this);
+                input.setMaxLines(1);
+                alert.setView(input);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String description = input.getText().toString();
+                        // Do something with value!
+                        FavoritesManager.addFavoriteStop(stop_code, description, getApplication());
+                        ((ImageView) v).setImageResource(R.drawable.fav_yellow);
+
+                        Toast toast = Toast.makeText(StopListActivity.this, "Stop Added to Favorites", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                        //Trying to hide the dial pad afterwards. It worked once. Never again.
+                        InputMethodManager inputManager = (InputMethodManager)
+                                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        inputManager.hideSoftInputFromWindow(stopCodeEdit.getApplicationWindowToken(), 0);
+
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+
+                alert.show();
+            }
+        }
+    };
+
 }
