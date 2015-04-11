@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,14 +52,12 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
         if (child.equals(FavoritesManager.empty_stop_list) ||
                 child.equals( FavoritesManager.empty_trip_list) )
         {
-            //SHOULD BE STRING not stop code.
-            Log.d("ME TALKING: ","THISE SHOULD NOT BE A STOP" + child );
-
             convertView = inflater.inflate(R.layout.list_item, null);
 
             item = (TextView) convertView.findViewById(R.id.lblListItem);
             item.setText(child);
-        } else {
+        } else if (groupPosition == 0) {
+            //STOP LIST
             convertView = inflater.inflate(R.layout.fav_stop_child, null);
             item = (TextView) convertView.findViewById(R.id.stop_child);
             ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
@@ -81,6 +78,43 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
                                     child.remove(childPosition);
                                     notifyDataSetChanged();
                                     Toast toast = Toast.makeText(context, "Stop Removed from Favorites", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            });
+                    builder.setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
+
+        } else if (groupPosition == 1) {
+            //TRIP LIST
+
+            convertView = inflater.inflate(R.layout.fav_stop_child, null);
+            item = (TextView) convertView.findViewById(R.id.stop_child);
+            ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
+            item.setText(child);
+            delete.setOnClickListener(new View.OnClickListener() {
+
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Remove this favorite?");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    List<String> childlist = mapping.get(groups.get(groupPosition));
+                                    String child = childlist.get(childPosition);
+                                    //DELETE FROM FAVORITES HERE. DEF NEED FAVORITES MANAGER
+                                    FavoritesManager.deleteFavoriteTrip(FavoritesManager.trip_descriptions.get(child), context);
+                                    childlist.remove(childPosition);
+                                    notifyDataSetChanged();
+                                    Toast toast = Toast.makeText(context, "Trip Removed from Favorites", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
                             });
