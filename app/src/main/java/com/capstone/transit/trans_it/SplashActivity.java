@@ -1,7 +1,6 @@
 package com.capstone.transit.trans_it;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +27,6 @@ public class SplashActivity extends Activity{
                     sleep(2000);
                     startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 finally{
@@ -42,7 +40,6 @@ public class SplashActivity extends Activity{
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 

@@ -131,20 +131,9 @@ public class FavoritesActivity extends ActionBarActivity {
 
 /*
 TODO
-change trip planner to start with the info from intent
-add second piece of info, user_identifier
-
-Hide dialpad when coming from another activity.
-
 create shortcut when installing
 
-Need to guarantee that decription is unique for trips.
-
-Buttons to ask jim for:
-    go
-    refresh
-    switch (could be the same as refresh if done right)
-    delete
+Add stop code picture  to stop monitor screen.
 
 Update list such that when all item are removed the default string is added.
 

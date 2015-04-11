@@ -49,19 +49,33 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:text="Show on Map"
         android:id="@+id/ShowMapB"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@drawable/button"
+        android:textColor="#FFFFFF"/>
 
     <ImageView
         android:id="@+id/favButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ShowMapB"
         android:layout_toRightOf="@+id/ShowMapB"
         android:layout_toEndOf="@+id/ShowMapB"
-        android:src="@drawable/fav_grey"/>
+        android:src="@drawable/fav_grey"
+        android:layout_alignBottom="@+id/ShowMapB"/>
+
+    <ImageView
+        android:id="@+id/reverseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/favButton"
+        android:layout_toRightOf="@+id/favButton"
+        android:layout_toEndOf="@+id/favButton"
+        android:src="@drawable/reverse"
+        android:layout_alignBottom="@+id/ShowMapB"/>
 
 </RelativeLayout>

@@ -27,30 +27,25 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight= "3"
+                android:layout_weight= "9"
                 android:id="@+id/editText"
                 android:imeOptions="actionDone"
-                android:layout_alignTop="@+id/textView"
-                android:layout_toRightOf="@+id/textView"
                 android:inputType="number" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_weight= "1"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:text="Go"
                 android:id="@+id/goButton"
-                android:layout_alignTop="@+id/editText"
-                android:layout_toRightOf="@+id/editText"
-                android:layout_toEndOf="@+id/editText" />
+                android:background="@drawable/button"
+                android:textColor="#FFFFFF"
+                android:padding="10dp"/>
 
             <ImageView
                 android:id="@+id/favButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignTop="@+id/goButton"
-                android:layout_toRightOf="@+id/goButton"
-                android:layout_toEndOf="@+id/gobutton"
                 android:src="@drawable/fav_grey"/>
 
         </LinearLayout>

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ public class TripPlannerActivity extends ActionBarActivity {
 
         final Button ShowOnMap = (Button) findViewById(R.id.ShowMapB);
         final ImageView favButton = (ImageView) findViewById(R.id.favButton);
+        final ImageView reverseButton = (ImageView) findViewById(R.id.reverseButton);
 
         Intent myIntent = getIntent();
         Start.setText(myIntent.getStringExtra("EXTRA_TRIP_START"));
@@ -56,6 +58,17 @@ public class TripPlannerActivity extends ActionBarActivity {
         });
 
         favButton.setOnClickListener(favButtonClickListener);
+        reverseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Editable temp;
+
+                temp = Start.getText();
+                Start.setText(End.getText());
+                End.setText(temp);
+
+            }
+        });
 
     }
 
@@ -155,8 +168,11 @@ public class TripPlannerActivity extends ActionBarActivity {
 
 /*
 TODO
-Add a switch button to switch destination and start addresses
 The  Favorites button never glows and I'm not sure how to make it better. :|
+Also can't delete favorites from this screen, that might be for the best though.
+
+The layout needs to be reorganized, the buttons aren't in great spots and don't work at all in landscape.
+
  */
 
 
