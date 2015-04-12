@@ -17,7 +17,7 @@
         android:id="@+id/delete"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/fav_red"
+        android:src="@drawable/delete"
         android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

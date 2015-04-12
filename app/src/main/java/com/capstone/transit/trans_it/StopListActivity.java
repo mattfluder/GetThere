@@ -49,6 +49,9 @@ public class StopListActivity extends ActionBarActivity {
     private List<String> routesServicing;
     private List<StopTimes> listRouteTimes;
 
+    private boolean displayingPicture = true;
+    private String lastStop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +61,13 @@ public class StopListActivity extends ActionBarActivity {
         final Button GoButton = (Button) findViewById(R.id.goButton);
         final ImageView favButton = (ImageView) findViewById(R.id.favButton);
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        final ImageView busStopPicture = (ImageView) findViewById(R.id.busStopPicture);
 
         final Intent fetchTimesIntent = new Intent(getApplicationContext(), FetchTimesService.class);
         fetchTimesIntent.putExtra("receiver",new times2Receiver(new Handler()));
 
         String intentStopCode = retrieveStopCode();
+        FavoritesManager.LoadFavorites(this);
 
         stopCodeEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -77,10 +82,21 @@ public class StopListActivity extends ActionBarActivity {
 
         stopCodeEdit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
+
                 if (FavoritesManager.isFavoriteStop(stopCodeEdit.getText().toString())) {
                     favButton.setImageResource(R.drawable.fav_yellow);
                 } else {
                     favButton.setImageResource(R.drawable.fav_grey);
+                }
+
+                String stop_code = stopCodeEdit.getText().toString();
+
+                if (stop_code.equals(lastStop)) {
+                    GoButton.setBackgroundResource(R.drawable.refresh);
+                    GoButton.setText("");
+                } else {
+                    GoButton.setBackgroundResource(R.drawable.button);
+                    GoButton.setText("Go!");
                 }
             }
 
@@ -101,7 +117,15 @@ public class StopListActivity extends ActionBarActivity {
 
                         inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                         startService(fetchTimesIntent);
-                        String stop_code = stopCodeEdit.getText().toString();
+
+                        lastStop = stopCodeEdit.getText().toString();
+                        GoButton.setBackgroundResource(R.drawable.refresh);
+                        GoButton.setText("");
+
+                        if (displayingPicture) {
+                            busStopPicture.setVisibility(View.GONE);
+                            displayingPicture = false;
+                        }
                     }
                 });
 
@@ -341,3 +365,10 @@ public class StopListActivity extends ActionBarActivity {
     };
 
 }
+
+
+/*
+TODO(Nick):
+Refresh button is kinda ugly. Fix later. At least it works? :|
+Also, this is still stuck in portrait.
+ */

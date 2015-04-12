@@ -1,15 +1,20 @@
 package com.capstone.transit.trans_it;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class TripPlannerActivity extends ActionBarActivity {
@@ -26,6 +31,14 @@ public class TripPlannerActivity extends ActionBarActivity {
         End.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.trip_list_item));
 
         final Button ShowOnMap = (Button) findViewById(R.id.ShowMapB);
+        final ImageView favButton = (ImageView) findViewById(R.id.favButton);
+        final ImageView reverseButton = (ImageView) findViewById(R.id.reverseButton);
+
+        FavoritesManager.LoadFavorites(this);
+
+        Intent myIntent = getIntent();
+        Start.setText(myIntent.getStringExtra("EXTRA_TRIP_START"));
+        End.setText(myIntent.getStringExtra("EXTRA_TRIP_END"));
 
         ShowOnMap.setOnClickListener(new View.OnClickListener() {
 
@@ -45,6 +58,20 @@ public class TripPlannerActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        favButton.setOnClickListener(favButtonClickListener);
+        reverseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Editable temp;
+
+                temp = Start.getText();
+                Start.setText(End.getText());
+                End.setText(temp);
+
+            }
+        });
+
     }
 
 
@@ -69,4 +96,86 @@ public class TripPlannerActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    //FAVORITES METHODS=======================================
+    final View.OnClickListener favButtonClickListener = new View.OnClickListener() {
+        @Override
+
+        public void onClick(final View v) {
+            final TextView tripStart = (TextView)findViewById(R.id.Start);
+            final TextView tripEnd = (TextView)findViewById(R.id.End);
+            final Trip trip = new Trip(tripStart.getText().toString(), tripEnd.getText().toString());
+
+            //ADD THE FAVORITE
+            AlertDialog.Builder alert = new AlertDialog.Builder(TripPlannerActivity.this);
+
+            alert.setTitle("Add To Favorites");
+            alert.setMessage("Enter a small description/name to identify trip. \n(e.g. \"ToGrandmas\"):");
+
+            // Set an EditText view to get user input
+            final EditText input = new EditText(TripPlannerActivity.this);
+            input.setMaxLines(1);
+            alert.setView(input);
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Canceled.
+                }
+            });
+
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //This is not used in the end. Just to diplay the button.
+                }
+            });
+
+            final AlertDialog dialog = alert.create();
+            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String description = input.getText().toString();
+
+                            if (description.equals("")){
+                                Toast toast = Toast.makeText(TripPlannerActivity.this, "Description cannot be empty.", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else if (FavoritesManager.isFavoriteTripName(description)) {
+                                Toast toast = Toast.makeText(TripPlannerActivity.this, "Description has already been used.", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
+                                dialog.dismiss();
+                                trip.setDescription(description);
+                                FavoritesManager.addFavoriteTrip(trip, getApplication());
+
+                                Toast toast = Toast.makeText(TripPlannerActivity.this, "Trip Added to Favorites", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+
+
+
+
+
+
+                        }
+                    });
+
+
+        }
+
+    };
+
 }
+
+/*
+TODO
+The  Favorites button never glows and I'm not sure how to make it better. :|
+Also can't delete favorites from this screen, that might be for the best though.
+
+The layout needs to be reorganized, the buttons aren't in great spots and don't work at all in landscape.
+
+ */
+
+
+

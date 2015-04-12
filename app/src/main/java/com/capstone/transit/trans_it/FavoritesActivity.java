@@ -22,6 +22,7 @@ public class FavoritesActivity extends ActionBarActivity {
     List<String> trip_child_list;
     Map<String, List<String>> collections;
     ExpandableListView expListView;
+    FavoritesListAdapter expListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,29 +32,28 @@ public class FavoritesActivity extends ActionBarActivity {
 
         createGroupList();
 
-        HashMap<String, List<String>> collections = new HashMap<String, List<String>>();
+        collections = new HashMap<String, List<String>>();
         stop_child_list = new ArrayList<String>();
         trip_child_list = new ArrayList<String>();
 
         FavoritesManager.LoadFavorites(this);
 
-        if (FavoritesManager.stopsize() == 0) {
+        if (FavoritesManager.stopSize() == 0) {
             stop_child_list.add(FavoritesManager.empty_stop_list);
         } else {
             stop_child_list.addAll(FavoritesManager.stop_set);
         }
         collections.put("Stops", stop_child_list);
 
-        if (FavoritesManager.tripsize() == 0) {
+        if (FavoritesManager.tripSize() == 0) {
             trip_child_list.add(FavoritesManager.empty_trip_list);
         }else {
-            trip_child_list.addAll(FavoritesManager.trip_set);
+            trip_child_list.addAll(FavoritesManager.trip_descriptions.keySet());
         }
         collections.put("Trips", trip_child_list);
 
         expListView = (ExpandableListView) findViewById(R.id.FavList);
-        final FavoritesListAdapter expListAdapter = new FavoritesListAdapter(
-                this, groupList, collections);
+        expListAdapter = new FavoritesListAdapter( this, groupList, collections);
         expListView.setAdapter(expListAdapter);
 
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -61,16 +61,32 @@ public class FavoritesActivity extends ActionBarActivity {
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 final String selected = (String) expListAdapter.getChild(groupPosition, childPosition);
-                if (!selected.equals(FavoritesManager.empty_stop_list)
-                        && !selected.equals(FavoritesManager.empty_trip_list)) {
-                    Intent stopmonitorintent = new Intent(FavoritesActivity.this, StopListActivity.class);
-                    stopmonitorintent.putExtra("STOP_CODE", selected);
-                    startActivity(stopmonitorintent);
-                }
+                Intent nextActivityIntent;
+                if (groupPosition == 0) {
+                    if (!selected.equals(FavoritesManager.empty_stop_list)) {
+                        nextActivityIntent = new Intent(FavoritesActivity.this, StopListActivity.class);
+                        nextActivityIntent.putExtra("STOP_CODE", selected);
+                        startActivity(nextActivityIntent);
+                    }
 
-                return true;
+                    return true;
+                }
+                else if (groupPosition == 1){
+                    if (!selected.equals(FavoritesManager.empty_trip_list)) {
+                        nextActivityIntent = new Intent(FavoritesActivity.this, TripPlannerActivity.class);
+                        nextActivityIntent.putExtra("EXTRA_TRIP_START", FavoritesManager.trip_descriptions.get(selected).start);
+                        nextActivityIntent.putExtra("EXTRA_TRIP_END", FavoritesManager.trip_descriptions.get(selected).end);
+                        startActivity(nextActivityIntent);
+                    }
+
+                    return true;
+                }
+                return false;
             }
         });
+
+        expListView.expandGroup( 0 );
+        expListView.expandGroup( 1 );
 
     }//ONCREATE END===================================================================================
 
@@ -97,6 +113,12 @@ public class FavoritesActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        expListAdapter.notifyDataSetChanged();
+    }
     private void createGroupList() {
         groupList = new ArrayList<String>();
         groupList.add("Stops");
@@ -109,12 +131,10 @@ public class FavoritesActivity extends ActionBarActivity {
 
 /*
 TODO
-change trip planner to start with the info from intent
-add second piece of info, user_identifier
-
-Hide dialpad when coming from another activity.
-
 create shortcut when installing
 
+Update list such that when all item are removed the default string is added.
+
+Maybe remove button background from delete symbol? So it's just a red "X". Not sure though.
 
  */

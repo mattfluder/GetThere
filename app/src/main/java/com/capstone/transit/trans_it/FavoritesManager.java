@@ -22,8 +22,9 @@ public final class FavoritesManager {
     final private static String STOPFILENAME = "favorite_stops";
     final private static String TRIPFILENAME = "favorite_trips";
     public static TreeSet<String> stop_set = new TreeSet<>();
-    public static TreeSet<String> trip_set = new TreeSet<>();
+    public static TreeSet<Trip> trip_set = new TreeSet<>();
     public static HashMap<String, String> stop_descriptions = new HashMap<>();
+    public static HashMap<String, Trip> trip_descriptions = new HashMap<>();
 
     private static boolean loaded = false;
     private static boolean stop_list_updated = false;
@@ -42,9 +43,19 @@ public final class FavoritesManager {
         return stop_set.contains(value);
     }
 
-    public static void deleteFavoriteTrip(String value, Context ctx) {
+    public static boolean isFavoriteTrip(Trip trip) {
+        return trip_set.contains(trip);
+        //Right now comparing on description. Probably change that for adding/removing trip.
+    }
 
-        trip_set.remove(value);
+    public static boolean isFavoriteTripName(String name) {
+        return trip_descriptions.containsKey(name);
+    }
+
+    public static void deleteFavoriteTrip(Trip trip, Context ctx) {
+        //CANNOT REALLY DELETE RIGHT NOW.
+        trip_set.remove(trip);
+        trip_descriptions.remove(trip.description);
         trip_list_updated = true;
         saveFavorites(ctx);
 
@@ -67,34 +78,19 @@ public final class FavoritesManager {
             LoadFavorites(ctx);
         }
 
-        /*
-        tring s = "<b>Bolded text</b>, <i>italic text</i>, even <u>underlined</u>!"
-        TextView tv = (TextView)findViewById(R.id.THE_TEXTVIEW_ID);
-        tv.setText(Html.fromHtml(s));
-        */
         stop_set.add(stop_code);
         stop_descriptions.put(stop_code, description);
         stop_list_updated = true;
         saveFavorites(ctx);
 
     }
-    public static void addFavoriteTrip(String trip_info, Context ctx) {
+    public static void addFavoriteTrip(Trip new_trip, Context ctx) {
         if (!loaded) {
             LoadFavorites(ctx);
         }
 
-        trip_set.add(trip_info);
-        trip_list_updated = true;
-        saveFavorites(ctx);
-    }
-
-    public static void addFavoriteTrip(String trip_info, String name, Context ctx) {
-        if (!loaded) {
-            LoadFavorites(ctx);
-        }
-        //name this  trip! ex. To Grandma's
-
-        trip_set.add(trip_info);
+        trip_set.add(new_trip);
+        trip_descriptions.put(new_trip.description, new_trip);
         trip_list_updated = true;
         saveFavorites(ctx);
     }
@@ -124,8 +120,10 @@ public final class FavoritesManager {
             try {
                 fos = ctx.openFileOutput(TRIPFILENAME, Context.MODE_PRIVATE);
 
-                for (String value : trip_set) {
-                    fos.write((value + "\n").getBytes());
+                for (Trip trip : trip_set) {
+                    fos.write((trip.start + "\n").getBytes());
+                    fos.write((trip.end + "\n").getBytes());
+                    fos.write((trip.description + "\n").getBytes());
                 }
 
 
@@ -137,10 +135,10 @@ public final class FavoritesManager {
 
     }
 
-    public static int stopsize() {
+    public static int stopSize() {
         return stop_set.size();
     }
-    public static int tripsize() {
+    public static int tripSize() {
         return trip_set.size();
     }
 
@@ -148,6 +146,7 @@ public final class FavoritesManager {
         if (!loaded) {
             Log.d("ME TALKING: ", "LOADING THINGS NOW/AGAIN");
             String description;
+            Trip trip;
             try {
                 FileInputStream fis = ctx.openFileInput(STOPFILENAME);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
@@ -166,12 +165,19 @@ public final class FavoritesManager {
                 e.printStackTrace();
             }
             try {
+                /*
+                //TEMP TO DESTROY FILE.
+                FileOutputStream fos = ctx.openFileOutput(TRIPFILENAME, Context.MODE_PRIVATE);
+                fos.close();
+                */
                 FileInputStream fis = ctx.openFileInput(TRIPFILENAME);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
                 for (String line; (line = reader.readLine()) != null; ) {
                     // process the line.
-                    trip_set.add(line);
+                    trip = new Trip(line, reader.readLine(), reader.readLine());
+                    trip_set.add(trip);
+                    trip_descriptions.put(trip.description, trip);
                 }
 
                 fis.close();

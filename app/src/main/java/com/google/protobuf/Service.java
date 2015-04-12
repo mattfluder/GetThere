@@ -53,7 +53,7 @@ public interface Service {
 
   /**
    * <p>Call a method of the service specified by MethodDescriptor.  This is
-   * normally implemented as a simple {@code switch()} that calls the standard
+   * normally implemented as a simple {@code reverse()} that calls the standard
    * definitions of the service's methods.
    *
    * <p>Preconditions:
