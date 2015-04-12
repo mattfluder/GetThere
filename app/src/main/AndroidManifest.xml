@@ -75,8 +75,7 @@
         <activity
             android:name=".StopListActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden|adjustPan">
 
 >            <!--android:screenOrientation="portrait"> -->
             <!--android:parentActivityName=".MainMenu" >
@@ -128,8 +127,7 @@
         <activity
             android:name=".FavoritesActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".MainMenu"
-            android:screenOrientation="portrait" >
+            android:parentActivityName=".MainMenu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainMenu" />

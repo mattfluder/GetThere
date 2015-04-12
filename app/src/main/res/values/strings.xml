@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">GeThere</string>
+    <string name="app_name">Get There!</string>
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="load_directions">Load Directions</string>

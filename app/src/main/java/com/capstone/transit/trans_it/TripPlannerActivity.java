@@ -34,6 +34,8 @@ public class TripPlannerActivity extends ActionBarActivity {
         final ImageView favButton = (ImageView) findViewById(R.id.favButton);
         final ImageView reverseButton = (ImageView) findViewById(R.id.reverseButton);
 
+        FavoritesManager.LoadFavorites(this);
+
         Intent myIntent = getIntent();
         Start.setText(myIntent.getStringExtra("EXTRA_TRIP_START"));
         End.setText(myIntent.getStringExtra("EXTRA_TRIP_END"));

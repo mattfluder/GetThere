@@ -133,8 +133,8 @@ public class FavoritesActivity extends ActionBarActivity {
 TODO
 create shortcut when installing
 
-Add stop code picture  to stop monitor screen.
-
 Update list such that when all item are removed the default string is added.
+
+Maybe remove button background from delete symbol? So it's just a red "X". Not sure though.
 
  */
