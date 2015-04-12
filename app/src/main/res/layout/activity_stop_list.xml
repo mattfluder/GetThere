@@ -38,17 +38,16 @@
 
             <Button
                 android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:text="Go"
                 android:id="@+id/goButton"
                 android:background="@drawable/button"
-                android:textColor="#FFFFFF"
-                android:padding="0dp"/>
+                android:textColor="#FFFFFF" />
 
             <ImageView
                 android:id="@+id/favButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
                 android:src="@drawable/fav_grey"/>
 
         </LinearLayout>
