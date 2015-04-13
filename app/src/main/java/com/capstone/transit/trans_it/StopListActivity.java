@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 
 public class StopListActivity extends ActionBarActivity {
@@ -202,6 +203,7 @@ public class StopListActivity extends ActionBarActivity {
             expListView.collapseGroup(i);
         String stopID; //not what is posted on bus stop sign
         String routeID;
+        String tripID;
         stopID = translateStopId(stopCodeEdit.getText().toString()); //stop code is what is posted on bus stop sign
         FeedMessage realData = null;
         FileInputStream fileIn = null;
@@ -262,9 +264,10 @@ public class StopListActivity extends ActionBarActivity {
                             TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
                             long unixSeconds = stopEventArrival.getTime();
                             Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
-                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.CANADA);
                             String formattedDate = sdf.format(date);
-                            currentStopTime = new StopTimes(formattedDate, routeID, trip.getTrip().getTripId(),true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel());
+                            tripID = trip.getTrip().getTripId();
+                            currentStopTime = new StopTimes(formattedDate, routeID, tripID,true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(),getTripHeader(tripID));
                             listRouteTimes.add(currentStopTime);
                             System.out.println(String.valueOf(stopEventArrival.getTime()));
                         }
@@ -278,6 +281,34 @@ public class StopListActivity extends ActionBarActivity {
         }
         listAdapter.notifyDataSetChanged();
     }
+
+    private String getTripHeader(String trip){
+        String tripHeader = null;
+        String line;
+        AssetManager mngr;
+
+        try {
+            mngr = getAssets();
+            InputStream is = mngr.open("trips.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+
+            while ((line = br.readLine()) != null) {  // Read until last line in .txt file
+                String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+
+                if (trip.equals(ArrayValues[2])) {
+                    tripHeader =  ArrayValues[3];
+                }
+            }
+            br.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if (tripHeader == null) tripHeader = "N/A";
+        return tripHeader;
+    }
+
     class times2Receiver extends ResultReceiver {
         public times2Receiver(Handler handler){
             super(handler);
