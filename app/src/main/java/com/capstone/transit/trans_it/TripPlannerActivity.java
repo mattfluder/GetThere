@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,30 +17,67 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 
 public class TripPlannerActivity extends ActionBarActivity {
+
+    private static final String TAG_ROUTES = "routes";
+    private static final String TAG_COPYRIGHTS = "copyrights";
+    private static final String TAG_LEGS = "legs";
+    private static final String TAG_STEPS = "steps";
+    private static final String TAG_DISTANCE = "distance";
+    private static final String TAG_DISTANCE_TEXT = "distance_text";
+    private static final String TAG_DISTANCE_VALUE = "distance_value";
+    private static final String TAG_DURATION = "duration";
+    private static final String TAG_END_LOCATION = "end_location";
+    private static final String TAG_HTML_INSTRUCTIONS = "html_instructions";
+    private static final String TAG_START_LOCATION = "start_location";
+    private static final String TAG_TRAVEL_MODE = "travel_mode";
+
+    private static String url;// = "http://maps.googleapis.com/maps/api/directions/json?origin=redfern+ave,+dublin&destination=limetree+ave,+dublin&sensor=false/";
+
+    // contacts JSONArray
+    JSONArray jRoutes = null;
+    JSONArray jLegs = null;
+    JSONArray jSteps = null;
+
+    // Hashmap for ListView
+    ArrayList<HashMap<String, String>> directionsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_planner);
 
+        directionsList = new ArrayList<HashMap<String, String>>();
+
+        //ListView list = (ListView)findViewById(android.R.id.list);
+
         final AutoCompleteTextView Start = (AutoCompleteTextView) findViewById(R.id.Start);
         final AutoCompleteTextView End = (AutoCompleteTextView) findViewById(R.id.End);
-
-        //ScrollView directionsScroll = (ScrollView) findViewById(R.id.scrollView);
-
 
         Start.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.trip_list_item));
         End.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.trip_list_item));
 
         final Button ShowOnMap = (Button) findViewById(R.id.ShowMapB);
+        final Button GetDirections = (Button) findViewById(R.id.getDirectionsB);
         final ImageView favButton = (ImageView) findViewById(R.id.favButton);
         final ImageView reverseButton = (ImageView) findViewById(R.id.reverseButton);
 
@@ -70,6 +109,30 @@ public class TripPlannerActivity extends ActionBarActivity {
             }
         });
 
+        GetDirections.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (validAddressCheck(Start, End) == 1) {
+
+                    double[] StartCoordinates, EndCoordinates;
+
+                    StartCoordinates = getFromLocation(Start.getText().toString());
+                    EndCoordinates = getFromLocation(End.getText().toString());
+
+                    LatLng origin = new LatLng(StartCoordinates[0], StartCoordinates[1]);
+                    LatLng dest = new LatLng(EndCoordinates[0], EndCoordinates[1]);
+
+                    url = getDirectionsUrl(origin, dest);
+
+                    new GetDirections().execute();
+
+
+                }
+            }
+        });
+
         favButton.setOnClickListener(favButtonClickListener);
         reverseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +145,90 @@ public class TripPlannerActivity extends ActionBarActivity {
 
             }
         });
+    }
+
+    /**
+     * Async task class to get json by making HTTP call
+     * */
+    private class GetDirections extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            // Creating service handler class instance
+            ServiceHandler sh = new ServiceHandler();
+
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
+
+            Log.d("Response: ", "> " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+
+                    // Getting JSON Array node
+                    jRoutes = jsonObj.getJSONArray(TAG_ROUTES);
+
+                    for(int i=0;i<jRoutes.length();i++){
+                        jLegs = ( (JSONObject)jRoutes.get(i)).getJSONArray("legs");
+
+                        /** Traversing all legs */
+                        for(int j=0;j<jLegs.length();j++){
+                            jSteps = ((JSONObject)jLegs.get(j)).getJSONArray("steps");
+
+                            /** Traversing all steps */
+                            for(int k=0;k<jSteps.length();k++){
+
+                                // Getting Distance Object
+
+                                JSONObject distance = ((JSONObject)jSteps.get(j)).getJSONObject(TAG_DISTANCE);
+                                String distance_text = distance.getString(TAG_DISTANCE_TEXT);
+                                String distance_value = distance.getString(TAG_DISTANCE_VALUE);
+
+                                HashMap<String, String> singleDirection = new HashMap<String, String>();
+
+                                singleDirection.put(TAG_DISTANCE_TEXT,distance_text);
+                                singleDirection.put(TAG_DISTANCE_VALUE,distance_value);
+
+                                directionsList.add(singleDirection);
+
+
+
+                            }
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("ServiceHandler", "Couldn't get any data from the url");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            /**
+             * Updating parsed JSON data into ListView
+             * */
+
+             ListAdapter adapter = new SimpleAdapter(
+                    TripPlannerActivity.this, directionsList,
+                    R.layout.direction_list_item, new String[] { TAG_DISTANCE_TEXT, TAG_DISTANCE_VALUE
+                     }, new int[] { R.id.text,
+                    R.id.value });
+
+            //ListView list = (ListView)findViewById(android.R.id.list);
+
+            //list.setAdapter(adapter);
+
+
+        }
+
     }
 
     public int validAddressCheck(AutoCompleteTextView Start, AutoCompleteTextView End){
@@ -132,6 +279,53 @@ public class TripPlannerActivity extends ActionBarActivity {
         }
 
         return signal;
+    }
+
+    private String getDirectionsUrl(LatLng origin,LatLng dest){
+
+        // Origin of route
+        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+
+        // Transit Mode
+
+        String mode = "mode=transit";
+
+        // Building the parameters to the web service
+        String parameters = str_origin+"&"+str_dest+"&"+mode+"&"+sensor;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+
+        return url;
+    }
+
+    public double[] getFromLocation(String address){
+
+        double[] Coordinates = new double[2];
+
+        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+        try
+        {
+            Address addressConvert = geoCoder.getFromLocationName(address , 1).get(0);
+            Coordinates[0] = addressConvert.getLatitude();
+            Coordinates[1] = addressConvert.getLongitude();
+
+        }
+        catch(Exception ee)
+        {
+
+        }
+
+        return Coordinates;
     }
 
 

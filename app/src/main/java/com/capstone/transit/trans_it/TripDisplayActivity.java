@@ -213,33 +213,6 @@ public class TripDisplayActivity extends FragmentActivity {
         }
     }
 
-    private void drawMarker(LatLng point){
-        mMarkerPoints.add(point);
-
-        // Creating MarkerOptions
-        MarkerOptions options = new MarkerOptions();
-
-        // Setting the position of the marker
-        options.position(point);
-
-        /**
-         * For the start location, the color of marker is GREEN and
-         * for the end location, the color of marker is RED.
-         */
-        if(mMarkerPoints.size()==1){
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        }else if(mMarkerPoints.size()==2){
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
-
-        // Add new marker to the Google Map Android API V2
-        mMap.addMarker(options);
-    }
-
-
-
-
-
 
     public String retrieveStartAddress() {
 
