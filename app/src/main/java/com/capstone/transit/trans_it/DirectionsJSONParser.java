@@ -3,6 +3,8 @@ package com.capstone.transit.trans_it;
 /**
  * Created by Thomas on 3/30/2015.
  */
+import android.widget.ScrollView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,7 @@ public class DirectionsJSONParser {
         JSONArray jRoutes = null;
         JSONArray jLegs = null;
         JSONArray jSteps = null;
+        ArrayList<String> directions = new ArrayList<String>();
 
         try {
 
@@ -39,6 +42,7 @@ public class DirectionsJSONParser {
                     /** Traversing all steps */
                     for(int k=0;k<jSteps.length();k++){
                         String polyline = "";
+                        //directions.add();
                         polyline = (String)((JSONObject)((JSONObject)jSteps.get(k)).get("polyline")).get("points");
                         List<LatLng> list = decodePoly(polyline);
 

@@ -20,9 +20,9 @@
         android:layout_below="@+id/from"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:layout_toLeftOf="@+id/reverseButton"
+        android:layout_toStartOf="@+id/reverseButton" />
 
     <TextView
         android:text="End Address"
@@ -52,30 +52,49 @@
         android:padding="10dp"
         android:text="Show on Map"
         android:id="@+id/ShowMapB"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:background="@drawable/button"
-        android:textColor="#FFFFFF"/>
+        android:textColor="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button" />
 
     <ImageView
         android:id="@+id/favButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ShowMapB"
-        android:layout_toRightOf="@+id/ShowMapB"
-        android:layout_toEndOf="@+id/ShowMapB"
         android:src="@drawable/fav_grey"
-        android:layout_alignBottom="@+id/ShowMapB"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageView
         android:id="@+id/reverseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/favButton"
-        android:layout_toRightOf="@+id/favButton"
-        android:layout_toEndOf="@+id/favButton"
         android:src="@drawable/reverse"
-        android:layout_alignBottom="@+id/ShowMapB"/>
+        android:layout_alignBottom="@+id/Start"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Directions"
+        android:id="@+id/button"
+        android:layout_alignTop="@+id/End"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/End"
+        android:layout_toEndOf="@+id/End" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/ShowMapB" />
+
 
 </RelativeLayout>
