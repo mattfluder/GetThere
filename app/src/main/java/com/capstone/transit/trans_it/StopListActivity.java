@@ -280,11 +280,14 @@ public class StopListActivity extends ActionBarActivity {
                             long unixSeconds = stopEventArrival.getTime();
                             tripID = trip.getTrip().getTripId();
                             SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.CANADA);
+                            SimpleDateFormat inFormat = new SimpleDateFormat("HH:MM:ss");
+                            Date parsedDate = new Date();
                             if (unixSeconds <1420070400){ //time given is Jan 1st 2015 @ midnight GMT
                                 String arrivalTime= replaceWithStatic(tripID, stopID);
                                 try {
-                                    String formattedDate = sdf.format(sdf.parse(arrivalTime));
-                                    currentStopTime = new StopTimes(formattedDate, routeID, tripID, false, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(), getTripHeader(tripID));
+                                    parsedDate = inFormat.parse(arrivalTime);
+                                    String formattedDate = sdf.format(parsedDate);
+                                    currentStopTime = new StopTimes(formattedDate, routeID, tripID, false, stopTime.getArrival().getDelay(), getTripHeader(tripID));
                                     listRouteTimes.add(currentStopTime);
                                 }
                                 catch (Exception e){

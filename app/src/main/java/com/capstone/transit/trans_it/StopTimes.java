@@ -24,6 +24,18 @@ public class StopTimes {
         setDisplay();
     }
 
+    public StopTimes (String inTime, String inRoute, String inTrip, boolean realtime, int inDelay,String inTripHeader){
+        time = inTime;
+        route = inRoute;
+
+        trip = inTrip;
+        isRealtime = realtime;
+        delay = inDelay;
+        vehicleNumber = null;
+        tripHeader = inTripHeader;
+        setDisplay();
+    }
+
     public void setTime (String inTime){
         this.time = inTime;
     }
@@ -100,7 +112,8 @@ public class StopTimes {
             else timeColor = Color.rgb(0,153,0);
         }
         else timeColor = Color.BLACK;
-        toDisplay = time + " To: "+ tripHeader + "\nVehicle:" + vehicleNumber;
+        toDisplay = time + " To: "+ tripHeader;
+        if (vehicleNumber !=null) toDisplay += "\nVehicle:" + vehicleNumber;
     }
 
 }
