@@ -110,26 +110,28 @@ public class StopListActivity extends ActionBarActivity {
         });
 
 
-                GoButton.setOnClickListener(new View.OnClickListener() {
+        GoButton.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        InputMethodManager inputManager = (InputMethodManager)
-                                getSystemService(Context.INPUT_METHOD_SERVICE);
+            @Override
+            public void onClick(View v) {
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                        inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                        startService(fetchTimesIntent);
+            inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            startService(fetchTimesIntent);
 
-                        lastStop = stopCodeEdit.getText().toString();
-                        GoButton.setBackgroundResource(R.drawable.refresh);
-                        GoButton.setText("");
+            lastStop = stopCodeEdit.getText().toString();
+            GoButton.setBackgroundResource(R.drawable.refresh);
+            GoButton.setText("");
 
-                        if (displayingPicture) {
-                            busStopPicture.setVisibility(View.GONE);
-                            displayingPicture = false;
-                        }
-                    }
-                });
+            if (displayingPicture) {
+                busStopPicture.setVisibility(View.GONE);
+                displayingPicture = false;
+            }
+            findViewById(R.id.stopsLoadingContatiner).setVisibility(View.VISIBLE);
+            findViewById(R.id.expandableListView).setVisibility(View.GONE);
+            }
+        });
 
         favButton.setOnClickListener(favButtonClickListener);
 
@@ -306,6 +308,8 @@ public class StopListActivity extends ActionBarActivity {
                 System.out.println("Next Loop");
             }
         }
+        findViewById(R.id.stopsLoadingContatiner).setVisibility(View.GONE);
+        findViewById(R.id.expandableListView).setVisibility(View.VISIBLE);
         listAdapter.notifyDataSetChanged();
     }
 
