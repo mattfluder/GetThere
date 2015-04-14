@@ -51,7 +51,7 @@ public class TripPlannerActivity extends ActionBarActivity {
     private static final String TAG_START_LOCATION = "start_location";
     private static final String TAG_TRAVEL_MODE = "travel_mode";
 
-    private static String url;// = "http://maps.googleapis.com/maps/api/directions/json?origin=redfern+ave,+dublin&destination=limetree+ave,+dublin&sensor=false/";
+    private static String url;
 
     // contacts JSONArray
     JSONArray jRoutes = null;
@@ -61,14 +61,13 @@ public class TripPlannerActivity extends ActionBarActivity {
     // Hashmap for ListView
     ArrayList<HashMap<String, String>> directionsList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_planner);
 
         directionsList = new ArrayList<HashMap<String, String>>();
-
-        //ListView list = (ListView)findViewById(android.R.id.list);
 
         final AutoCompleteTextView Start = (AutoCompleteTextView) findViewById(R.id.Start);
         final AutoCompleteTextView End = (AutoCompleteTextView) findViewById(R.id.End);
@@ -216,15 +215,15 @@ public class TripPlannerActivity extends ActionBarActivity {
              * Updating parsed JSON data into ListView
              * */
 
+
+            ListView list = (ListView)findViewById(android.R.id.list);
+
              ListAdapter adapter = new SimpleAdapter(
-                    TripPlannerActivity.this, directionsList,
-                    R.layout.direction_list_item, new String[] { TAG_DISTANCE_TEXT, TAG_DISTANCE_VALUE
-                     }, new int[] { R.id.text,
-                    R.id.value });
+                    TripPlannerActivity.this, directionsList, R.layout.direction_list_item,
+                    new String[] { TAG_DISTANCE_TEXT, TAG_DISTANCE_VALUE},
+                    new int[] { R.id.text, R.id.value });
 
-            //ListView list = (ListView)findViewById(android.R.id.list);
-
-            //list.setAdapter(adapter);
+             list.setAdapter(adapter);
 
 
         }
