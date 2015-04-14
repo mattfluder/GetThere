@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.TextFormat;
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate;
@@ -246,7 +247,19 @@ public class StopListActivity extends ActionBarActivity {
             e1.printStackTrace();
         }
 
-        if (!stopFound) realData = null;
+        if (!stopFound){
+            realData = null;
+            AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
+            builder.setMessage("Stop not found.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
 
         if (realData != null) {
             for (int i = 0; i < listDataHeader.size(); i++) {
@@ -263,13 +276,27 @@ public class StopListActivity extends ActionBarActivity {
                         if (stopTime.getStopId().equals(stopID)) {
                             TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
                             long unixSeconds = stopEventArrival.getTime();
-                            Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
-                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.CANADA);
-                            String formattedDate = sdf.format(date);
                             tripID = trip.getTrip().getTripId();
-                            currentStopTime = new StopTimes(formattedDate, routeID, tripID,true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(),getTripHeader(tripID));
-                            listRouteTimes.add(currentStopTime);
-                            System.out.println(String.valueOf(stopEventArrival.getTime()));
+                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.CANADA);
+                            if (unixSeconds <1420070400){ //time given is Jan 1st 2015 @ midnight GMT
+                                String arrivalTime= replaceWithStatic(tripID, stopID);
+                                try {
+                                    String formattedDate = sdf.format(sdf.parse(arrivalTime));
+                                    currentStopTime = new StopTimes(formattedDate, routeID, tripID, false, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(), getTripHeader(tripID));
+                                    listRouteTimes.add(currentStopTime);
+                                }
+                                catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                            else {
+                                Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000 for the date format
+                                String formattedDate = sdf.format(date);
+                                currentStopTime = new StopTimes(formattedDate, routeID, tripID, true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(), getTripHeader(tripID));
+                                listRouteTimes.add(currentStopTime);
+                                System.out.println(String.valueOf(stopEventArrival.getTime()));
+                            }
+                            break;
                         }
                     }
                 }
@@ -280,6 +307,37 @@ public class StopListActivity extends ActionBarActivity {
             }
         }
         listAdapter.notifyDataSetChanged();
+    }
+
+    private String replaceWithStatic(String tripID, String stopID){
+        String line;
+        String time = null;
+        AssetManager mngr;
+
+
+        try {
+            mngr = getAssets();
+            InputStream is = mngr.open("stop_times.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+
+            while ((line = br.readLine()) != null) {  // Read until last line in .txt file
+                String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+
+                if (tripID.equals(ArrayValues[0])) {
+                    if (stopID.equals(ArrayValues[3])){
+                       time = ArrayValues[1];
+                        break;
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if (time == null) time = "N/A";
+        return time;
     }
 
     private String getTripHeader(String trip){
@@ -299,6 +357,7 @@ public class StopListActivity extends ActionBarActivity {
 
                 if (trip.equals(ArrayValues[2])) {
                     tripHeader =  ArrayValues[3];
+                    break;
                 }
             }
             br.close();
@@ -316,8 +375,24 @@ public class StopListActivity extends ActionBarActivity {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
-            System.out.println("Result Received");
-            updateTimesList();
+            boolean errors;
+            errors= resultData.getBoolean("Errors");
+            if (errors){
+                AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
+                builder.setTitle("Error getting real-time data.")
+                        .setMessage("Check data connection?")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do things
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            else {
+                updateTimesList();
+            }
         }
     }
 
@@ -401,5 +476,4 @@ public class StopListActivity extends ActionBarActivity {
 /*
 TODO(Nick):
 Refresh button is kinda ugly. Fix later. At least it works? :|
-Also, this is still stuck in portrait.
  */
