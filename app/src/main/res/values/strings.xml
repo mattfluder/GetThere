@@ -13,5 +13,7 @@
     <string name="title_activity_trip_display">Map</string>
     <string name="google_maps_key">AIzaSyDhAnfAN9vLZORcCkvNjyFM4318ZpobqsA</string>
     <string name="title_activity_favorites">FavoritesActivity</string>
+    <string name="title_activity_route_list">RouteList</string>
+    <string name="title_activity_route_details">RouteDetails</string>
 
 </resources>
