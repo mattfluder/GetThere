@@ -7,20 +7,24 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.capstone.transit.trans_it.StopListActivity">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Stop Code:"
+                android:text="Stop Number:"
                 android:textSize="20sp"
                 android:id="@+id/textView" />
+
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -31,43 +35,67 @@
                 android:inputType="number"
                 android:maxLines="1"
                 android:maxLength="4"/>
+
             <Button
                 android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:text="Go"
                 android:id="@+id/goButton"
                 android:background="@drawable/button"
-                android:textColor="#FFFFFF"
-                android:padding="0dp"/>
+                android:textColor="#FFFFFF" />
+
             <ImageView
                 android:id="@+id/favButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
                 android:src="@drawable/fav_grey"/>
+
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Stop Times:"
+            android:id="@+id/stopTimeLabel"
+            android:layout_weight="0.1" />
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
             android:id="@+id/StopTimesLayout">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Stop Times:"
-                android:id="@+id/stopTimeLabel"
-                android:layout_weight="0.1" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="gone"
+                android:id="@+id/stopsLoadingContatiner">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/stopTimesLoadingBar"
+                    android:layout_gravity="center"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
             <ExpandableListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/expandableListView"
-                android:layout_weight="0.9" />
+                android:layout_weight="0.9"
+                android:visibility="visible" />
+
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/bus_stop_pic"
-                android:id="@+id/busStopPicture"/>
+                android:id="@+id/busStopPicture"
+                android:visibility="visible" />
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

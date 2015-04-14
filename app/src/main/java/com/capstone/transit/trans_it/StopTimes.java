@@ -6,13 +6,13 @@ import android.graphics.Color;
  * Created by matt on 18/03/15.
  */
 public class StopTimes {
-    private String time, route, trip, vehicleNumber, toDisplay;
+    private String time, route, trip, vehicleNumber, toDisplay, tripHeader;
     private int timeColor = Color.BLACK;
     private int delay = 0;
     private boolean isRealtime;
 
     //Constructor
-    public StopTimes (String inTime, String inRoute, String inTrip, boolean realtime, int inDelay,String inVehicleNumber){
+    public StopTimes (String inTime, String inRoute, String inTrip, boolean realtime, int inDelay,String inVehicleNumber, String inTripHeader){
         time = inTime;
         route = inRoute;
 
@@ -20,14 +20,8 @@ public class StopTimes {
         isRealtime = realtime;
         delay = inDelay;
         vehicleNumber = inVehicleNumber;
-        if (isRealtime){
-            if (delay > 180) {
-                timeColor = Color.RED;
-            }
-            else timeColor = Color.rgb(0,153,0);
-        }
-        else timeColor = Color.BLACK;
-        toDisplay = time + " Vehicle:" + vehicleNumber;
+        tripHeader = inTripHeader;
+        setDisplay();
     }
 
     public void setTime (String inTime){
@@ -98,5 +92,15 @@ public class StopTimes {
         this.isRealtime = isRealtime;
     }
 
+    private void setDisplay(){
+        if (isRealtime){
+            if (delay > 180) {
+                timeColor = Color.RED;
+            }
+            else timeColor = Color.rgb(0,153,0);
+        }
+        else timeColor = Color.BLACK;
+        toDisplay = time + " To: "+ tripHeader + "\nVehicle:" + vehicleNumber;
+    }
 
 }

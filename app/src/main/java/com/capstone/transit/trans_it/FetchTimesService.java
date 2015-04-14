@@ -3,6 +3,7 @@ package com.capstone.transit.trans_it;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
@@ -18,10 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * An {@link android.app.IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * helper methods.
+    Gets the real time GTFS_TripUpdates file from the City of Hamilton OpenData server
+    returns:
+    0 if successful
+    1 if URL error
+    2 if urlConnection Error
+    3 if BufferedInput Stream Error
+    4 if Writing to File error
+    5 if Close Stream Error
  */
 public class FetchTimesService extends IntentService {
     /**
@@ -44,17 +49,20 @@ public class FetchTimesService extends IntentService {
         catch (Exception e) {
             e.printStackTrace();
             errors = 1;
+            exitWithError(intent);
+            return;
         }
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             System.out.println("Opened Connection");
-            errors = 1;
         }
         catch(Exception e) {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Open URL", Toast.LENGTH_SHORT);
             toast.show();*/
             e.printStackTrace();
-            errors = 1;
+            errors = 2;
+            exitWithError(intent);
+            return;
         }
         try {
             is = new BufferedInputStream(urlConnection.getInputStream());
@@ -64,7 +72,9 @@ public class FetchTimesService extends IntentService {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Create Input Stream", Toast.LENGTH_SHORT);
             toast.show();*/
             e.printStackTrace();
-            errors = 1;
+            errors = 3;
+            exitWithError(intent);
+            return;
         }
         try {
             File GTFR_TripUpdates = new File (getFilesDir(),"GTFS_TripUpdates.pb");
@@ -79,7 +89,9 @@ public class FetchTimesService extends IntentService {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Write File", Toast.LENGTH_SHORT);
             toast.show();*/
             e.printStackTrace();
-            errors = 1;
+            errors = 4;
+            exitWithError(intent);
+            return;
         }
         finally{
             try {
@@ -91,7 +103,9 @@ public class FetchTimesService extends IntentService {
             catch (Exception e) {
                 System.out.print("Failed to Close Streams");
                 e.printStackTrace();
-                errors = 1;
+                errors = 5;
+                exitWithError(intent);
+                return;
             }
         }
         ResultReceiver receiver = intent.getParcelableExtra("receiver");
@@ -100,4 +114,13 @@ public class FetchTimesService extends IntentService {
         receiver.send(errors,resultData);
         System.out.println("Sent Results");
     }
+
+    private void exitWithError(Intent intent){
+        ResultReceiver receiver = intent.getParcelableExtra("receiver");
+        Bundle resultData = new Bundle();
+        resultData.putBoolean("Errors", true);
+        receiver.send(errors,resultData);
+        System.out.println("Sent Results");
+    }
+
 }

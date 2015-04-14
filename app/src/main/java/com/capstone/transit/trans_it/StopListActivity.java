@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.TextFormat;
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 
 public class StopListActivity extends ActionBarActivity {
@@ -108,26 +110,28 @@ public class StopListActivity extends ActionBarActivity {
         });
 
 
-                GoButton.setOnClickListener(new View.OnClickListener() {
+        GoButton.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        InputMethodManager inputManager = (InputMethodManager)
-                                getSystemService(Context.INPUT_METHOD_SERVICE);
+            @Override
+            public void onClick(View v) {
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                        inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                        startService(fetchTimesIntent);
+            inputManager.hideSoftInputFromWindow(stopCodeEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            startService(fetchTimesIntent);
 
-                        lastStop = stopCodeEdit.getText().toString();
-                        GoButton.setBackgroundResource(R.drawable.refresh);
-                        GoButton.setText("");
+            lastStop = stopCodeEdit.getText().toString();
+            GoButton.setBackgroundResource(R.drawable.refresh);
+            GoButton.setText("");
 
-                        if (displayingPicture) {
-                            busStopPicture.setVisibility(View.GONE);
-                            displayingPicture = false;
-                        }
-                    }
-                });
+            if (displayingPicture) {
+                busStopPicture.setVisibility(View.GONE);
+                displayingPicture = false;
+            }
+            findViewById(R.id.stopsLoadingContatiner).setVisibility(View.VISIBLE);
+            findViewById(R.id.expandableListView).setVisibility(View.GONE);
+            }
+        });
 
         favButton.setOnClickListener(favButtonClickListener);
 
@@ -202,6 +206,7 @@ public class StopListActivity extends ActionBarActivity {
             expListView.collapseGroup(i);
         String stopID; //not what is posted on bus stop sign
         String routeID;
+        String tripID;
         stopID = translateStopId(stopCodeEdit.getText().toString()); //stop code is what is posted on bus stop sign
         FeedMessage realData = null;
         FileInputStream fileIn = null;
@@ -244,7 +249,19 @@ public class StopListActivity extends ActionBarActivity {
             e1.printStackTrace();
         }
 
-        if (!stopFound) realData = null;
+        if (!stopFound){
+            realData = null;
+            AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
+            builder.setMessage("Stop not found.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
 
         if (realData != null) {
             for (int i = 0; i < listDataHeader.size(); i++) {
@@ -261,12 +278,27 @@ public class StopListActivity extends ActionBarActivity {
                         if (stopTime.getStopId().equals(stopID)) {
                             TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
                             long unixSeconds = stopEventArrival.getTime();
-                            Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000
-                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
-                            String formattedDate = sdf.format(date);
-                            currentStopTime = new StopTimes(formattedDate, routeID, trip.getTrip().getTripId(),true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel());
-                            listRouteTimes.add(currentStopTime);
-                            System.out.println(String.valueOf(stopEventArrival.getTime()));
+                            tripID = trip.getTrip().getTripId();
+                            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.CANADA);
+                            if (unixSeconds <1420070400){ //time given is Jan 1st 2015 @ midnight GMT
+                                String arrivalTime= replaceWithStatic(tripID, stopID);
+                                try {
+                                    String formattedDate = sdf.format(sdf.parse(arrivalTime));
+                                    currentStopTime = new StopTimes(formattedDate, routeID, tripID, false, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(), getTripHeader(tripID));
+                                    listRouteTimes.add(currentStopTime);
+                                }
+                                catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                            else {
+                                Date date = new Date(unixSeconds * 1000);//the time the pb files give us needs to be scaled up buy 1000 for the date format
+                                String formattedDate = sdf.format(date);
+                                currentStopTime = new StopTimes(formattedDate, routeID, tripID, true, stopTime.getArrival().getDelay(), trip.getVehicle().getLabel(), getTripHeader(tripID));
+                                listRouteTimes.add(currentStopTime);
+                                System.out.println(String.valueOf(stopEventArrival.getTime()));
+                            }
+                            break;
                         }
                     }
                 }
@@ -276,8 +308,70 @@ public class StopListActivity extends ActionBarActivity {
                 System.out.println("Next Loop");
             }
         }
+        findViewById(R.id.stopsLoadingContatiner).setVisibility(View.GONE);
+        findViewById(R.id.expandableListView).setVisibility(View.VISIBLE);
         listAdapter.notifyDataSetChanged();
     }
+
+    private String replaceWithStatic(String tripID, String stopID){
+        String line;
+        String time = null;
+        AssetManager mngr;
+
+
+        try {
+            mngr = getAssets();
+            InputStream is = mngr.open("stop_times.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+
+            while ((line = br.readLine()) != null) {  // Read until last line in .txt file
+                String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+
+                if (tripID.equals(ArrayValues[0])) {
+                    if (stopID.equals(ArrayValues[3])){
+                       time = ArrayValues[1];
+                        break;
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if (time == null) time = "N/A";
+        return time;
+    }
+
+    private String getTripHeader(String trip){
+        String tripHeader = null;
+        String line;
+        AssetManager mngr;
+
+        try {
+            mngr = getAssets();
+            InputStream is = mngr.open("trips.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+
+            while ((line = br.readLine()) != null) {  // Read until last line in .txt file
+                String[] ArrayValues = line.split(","); // Seperate line by commas into a list
+
+                if (trip.equals(ArrayValues[2])) {
+                    tripHeader =  ArrayValues[3];
+                    break;
+                }
+            }
+            br.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if (tripHeader == null) tripHeader = "N/A";
+        return tripHeader;
+    }
+
     class times2Receiver extends ResultReceiver {
         public times2Receiver(Handler handler){
             super(handler);
@@ -285,8 +379,24 @@ public class StopListActivity extends ActionBarActivity {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
-            System.out.println("Result Received");
-            updateTimesList();
+            boolean errors;
+            errors= resultData.getBoolean("Errors");
+            if (errors){
+                AlertDialog.Builder builder = new AlertDialog.Builder(StopListActivity.this);
+                builder.setTitle("Error getting real-time data.")
+                        .setMessage("Check data connection?")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do things
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            else {
+                updateTimesList();
+            }
         }
     }
 
@@ -370,5 +480,4 @@ public class StopListActivity extends ActionBarActivity {
 /*
 TODO(Nick):
 Refresh button is kinda ugly. Fix later. At least it works? :|
-Also, this is still stuck in portrait.
  */
