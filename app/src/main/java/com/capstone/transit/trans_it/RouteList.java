@@ -11,12 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class RouteList extends ActionBarActivity {
@@ -38,6 +40,7 @@ public class RouteList extends ActionBarActivity {
 
         routesLV = (ListView) findViewById(R.id.routeListView);
         routetxt = "routes.txt";
+        final HashMap<String, String> routeIDs = new HashMap<>();
 
         //LOAD LIST OF ROUTES
         try {
@@ -62,6 +65,7 @@ public class RouteList extends ActionBarActivity {
                 routeNames.put(routeNumber,splitLine[0]);
                 */
                 routeNames.add(splitLine[splitLine.length - 1] + " - " + splitLine[0]);
+                routeIDs.put(splitLine[splitLine.length - 1] + " - " + splitLine[0], splitLine[5]);
                 //might have to get a list of ints one way or another to send to the next activity.
             }
 
@@ -79,9 +83,11 @@ public class RouteList extends ActionBarActivity {
         routesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO(NICK):
-                // putExtra info.
-                startActivity(new Intent("com.capstone.transit.trans_it.RouteDetails"));
+                Intent nextActivity = new Intent("com.capstone.transit.trans_it.RouteDetails");
+                TextView temp = (TextView) view.findViewById(R.id.lblListHeader);
+                nextActivity.putExtra("EXTRA_NAME", temp.getText().toString());
+                nextActivity.putExtra("EXTRA_ROUTE_ID", routeIDs.get(temp.getText().toString()));
+                startActivity(nextActivity);
             }
         });
 

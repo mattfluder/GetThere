@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.protobuf.TextFormat;
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate;
@@ -479,8 +478,7 @@ public class StopListActivity extends ActionBarActivity {
 
 }
 
-
-/*
-TODO(Nick):
-Refresh button is kinda ugly. Fix later. At least it works? :|
- */
+//TODO:
+// Rotating the screen reloads the data. Don't.
+// Pressing back while loading has to wait, can we cancel a service so it goes a little faster?
+// Not a big deal if we can't.

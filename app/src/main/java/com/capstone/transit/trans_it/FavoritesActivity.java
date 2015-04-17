@@ -1,12 +1,17 @@
 package com.capstone.transit.trans_it;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,13 +28,17 @@ public class FavoritesActivity extends ActionBarActivity {
     Map<String, List<String>> collections;
     ExpandableListView expListView;
     FavoritesListAdapter expListAdapter;
+    Menu theMenu;
+    TextView renamingText;
+
+    boolean renaming = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-
+        renamingText = (TextView) findViewById(R.id.renamingText);
         createGroupList();
 
         collections = new HashMap<String, List<String>>();
@@ -56,37 +65,12 @@ public class FavoritesActivity extends ActionBarActivity {
         expListAdapter = new FavoritesListAdapter( this, groupList, collections);
         expListView.setAdapter(expListAdapter);
 
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                final String selected = (String) expListAdapter.getChild(groupPosition, childPosition);
-                Intent nextActivityIntent;
-                if (groupPosition == 0) {
-                    if (!selected.equals(FavoritesManager.empty_stop_list)) {
-                        nextActivityIntent = new Intent(FavoritesActivity.this, StopListActivity.class);
-                        nextActivityIntent.putExtra("STOP_CODE", selected);
-                        startActivity(nextActivityIntent);
-                    }
-
-                    return true;
-                }
-                else if (groupPosition == 1){
-                    if (!selected.equals(FavoritesManager.empty_trip_list)) {
-                        nextActivityIntent = new Intent(FavoritesActivity.this, TripPlannerActivity.class);
-                        nextActivityIntent.putExtra("EXTRA_TRIP_START", FavoritesManager.trip_descriptions.get(selected).start);
-                        nextActivityIntent.putExtra("EXTRA_TRIP_END", FavoritesManager.trip_descriptions.get(selected).end);
-                        startActivity(nextActivityIntent);
-                    }
-
-                    return true;
-                }
-                return false;
-            }
-        });
+        expListView.setOnChildClickListener(startActivityListener);
 
         expListView.expandGroup( 0 );
         expListView.expandGroup( 1 );
+
+
 
     }//ONCREATE END===================================================================================
 
@@ -95,6 +79,7 @@ public class FavoritesActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_favorites, menu);
+        theMenu = menu;
         return true;
     }
 
@@ -106,7 +91,12 @@ public class FavoritesActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_rename) {
+            if (renaming) {
+                stopRenaming();
+            } else {
+                startRenaming();
+            }
             return true;
         }
 
@@ -119,13 +109,166 @@ public class FavoritesActivity extends ActionBarActivity {
 
         expListAdapter.notifyDataSetChanged();
     }
+
     private void createGroupList() {
         groupList = new ArrayList<String>();
         groupList.add("Stops");
         groupList.add("Trips");
     }
 
+    ExpandableListView.OnChildClickListener startActivityListener = new ExpandableListView.OnChildClickListener() {
 
+        public boolean onChildClick(ExpandableListView parent, View v,
+        int groupPosition, int childPosition, long id) {
+            final String selected = (String) expListAdapter.getChild(groupPosition, childPosition);
+            Intent nextActivityIntent;
+            if (groupPosition == 0) {
+                if (!selected.equals(FavoritesManager.empty_stop_list)) {
+                    nextActivityIntent = new Intent(FavoritesActivity.this, StopListActivity.class);
+                    nextActivityIntent.putExtra("STOP_CODE", selected);
+                    startActivity(nextActivityIntent);
+                }
+
+                return true;
+            }
+            else if (groupPosition == 1){
+                if (!selected.equals(FavoritesManager.empty_trip_list)) {
+                    nextActivityIntent = new Intent(FavoritesActivity.this, TripPlannerActivity.class);
+                    nextActivityIntent.putExtra("EXTRA_TRIP_START", FavoritesManager.trip_descriptions.get(selected).start);
+                    nextActivityIntent.putExtra("EXTRA_TRIP_END", FavoritesManager.trip_descriptions.get(selected).end);
+                    startActivity(nextActivityIntent);
+                }
+
+                return true;
+            }
+            return false;
+        }
+    };
+
+    ExpandableListView.OnChildClickListener startRenameListener = new ExpandableListView.OnChildClickListener() {
+
+        public boolean onChildClick(ExpandableListView parent, View v,
+                                    int groupPosition, int childPosition, long id) {
+            final String selected = (String) expListAdapter.getChild(groupPosition, childPosition);
+
+            if (groupPosition == 0) {
+                if (!selected.equals(FavoritesManager.empty_stop_list)) {
+                    //rename stop
+                    AlertDialog.Builder alert = new AlertDialog.Builder(FavoritesActivity.this);
+
+                    alert.setTitle("Rename Favorite Stop");
+                    alert.setMessage("Enter a new description/name to identify stop " + selected + ":");
+
+                    // Set an EditText view to get user input
+                    final EditText input = new EditText(FavoritesActivity.this);
+                    input.setMaxLines(1);
+                    alert.setView(input);
+
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String description = input.getText().toString();
+                            // Do something with value!
+                            FavoritesManager.deleteFavoriteStop(selected, getApplication());
+                            FavoritesManager.addFavoriteStop(selected, description, getApplication());
+
+                            Toast toast = Toast.makeText(FavoritesActivity.this, "Favorite Stop Renamed.", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    });
+
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Canceled.
+                        }
+                    });
+
+                    alert.show();
+
+                    stopRenaming();
+                }
+                return true;
+            }
+            else if (groupPosition == 1){
+                if (!selected.equals(FavoritesManager.empty_trip_list)) {
+                    ///rename trip.
+                    AlertDialog.Builder alert = new AlertDialog.Builder(FavoritesActivity.this);
+
+                    alert.setTitle("Rename Favorite Trip");
+                    alert.setMessage("Enter a new description/name to identify trip. \n(e.g. \"To Grandpas\"):");
+
+                    // Set an EditText view to get user input
+                    final EditText input = new EditText(FavoritesActivity.this);
+                    input.setMaxLines(1);
+                    alert.setView(input);
+
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Canceled.
+                        }
+                    });
+
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //This is not used in the end. Just to display the button.
+                        }
+                    });
+
+                    final AlertDialog dialog = alert.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String description = input.getText().toString();
+
+                                    if (description.equals("")) {
+                                        Toast toast = Toast.makeText(FavoritesActivity.this, "Description cannot be empty.", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    } else if (FavoritesManager.isFavoriteTripName(description)) {
+                                        Toast toast = Toast.makeText(FavoritesActivity.this, "Description has already been used.", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    } else {
+                                        dialog.dismiss();
+                                        Trip trip = FavoritesManager.getTrip(selected);
+                                        trip.setDescription(description);
+                                        FavoritesManager.deleteFavoriteTrip(selected, getApplication());
+                                        FavoritesManager.addFavoriteTrip(trip, getApplication());
+
+                                        Toast toast = Toast.makeText(FavoritesActivity.this, "Trip Renamed.", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+
+                                }
+                            });
+
+                    stopRenaming();
+                }
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private void startRenaming() {
+        expListView.setOnChildClickListener(startRenameListener);
+        theMenu.getItem(0).setTitle("Stop Renaming");
+        Toast toast = Toast.makeText(this, "Tap to rename a favorite.", Toast.LENGTH_SHORT);
+        toast.show();
+        renaming = !renaming;
+        renamingText.setVisibility(View.VISIBLE);
+    }
+
+    private void stopRenaming() {
+        expListView.setOnChildClickListener(startActivityListener);
+        theMenu.getItem(0).setTitle("Rename Favorite");
+        /*
+        //Might use this later if this is implemented as a rename mode instead of a single rename then done.
+        Toast toast = Toast.makeText(this, "Done renaming.", Toast.LENGTH_SHORT);
+        toast.show();
+        */
+        renaming = !renaming;
+        renamingText.setVisibility(View.GONE);
+    }
 
 }
 
@@ -134,7 +277,5 @@ TODO
 create shortcut when installing
 
 Update list such that when all item are removed the default string is added.
-
-Maybe remove button background from delete symbol? So it's just a red "X". Not sure though.
 
  */

@@ -15,7 +15,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -230,13 +229,37 @@ public class TripPlannerActivity extends ActionBarActivity {
 }
 
 /*
-TODO
-The  Favorites button never glows and I'm not sure how to make it better. :|
-Also can't delete favorites from this screen, that might be for the best though.
+TODO(TOM):
+
+Some valid trips aren't validated properly.
+ GH Gunther Huettlin Manufacturing .....
+ to
+ DFFD, Ouagadougou, Centre, Burkina Faso
+
+ Does not work.
+
+ ACTUALLY it doesn't validate anything.
+
+
+
+ Also in the same session but unrelated, It crashed with a null pointer exception.
+ StackTrace:
+ 04-17 14:43:47.663    9092-9092/com.capstone.transit.trans_it E/AndroidRuntime﹕ FATAL EXCEPTION: main
+    java.lang.NullPointerException
+            at com.capstone.transit.trans_it.PlacesAutoCompleteAdapter.getCount(PlacesAutoCompleteAdapter.java:43)
+            at android.widget.AdapterView.checkFocus(AdapterView.java:700)
+            at android.widget.AdapterView$AdapterDataSetObserver.onInvalidated(AdapterView.java:823)
+            at android.widget.AbsListView$AdapterDataSetObserver.onInvalidated(AbsListView.java:5619)
+            at android.database.DataSetObservable.notifyInvalidated(DataSetObservable.java:47)
+            at android.widget.BaseAdapter.notifyDataSetInvalidated(BaseAdapter.java:59)
+            at com.capstone.transit.trans_it.PlacesAutoCompleteAdapter$1.publishResults(PlacesAutoCompleteAdapter.java:74)
 
 The layout needs to be reorganized, the buttons aren't in great spots and don't work at all in landscape.
 
  */
 
+/*
+TODO:(NICK)
 
-
+Check if renaming favorites works after tom fixes the validation issue.
+*/
