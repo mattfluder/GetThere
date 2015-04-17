@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +47,7 @@ public class TripPlannerActivity extends ActionBarActivity {
     private static final String TAG_DISTANCE_TEXT = "distance_text";
     private static final String TAG_DISTANCE_VALUE = "distance_value";
     private static final String TAG_DURATION = "duration";
+    private static final String TAG_DURATION_TEXT = "duration_text";
     private static final String TAG_END_LOCATION = "end_location";
     private static final String TAG_HTML_INSTRUCTIONS = "html_instructions";
     private static final String TAG_START_LOCATION = "start_location";
@@ -60,6 +62,8 @@ public class TripPlannerActivity extends ActionBarActivity {
 
     // Hashmap for ListView
     ArrayList<HashMap<String, String>> directionsList;
+
+    private ListView list;
 
 
     @Override
@@ -91,7 +95,7 @@ public class TripPlannerActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                if(validAddressCheck(Start,End) == 1){
+               // if(validAddressCheck(Start,End) == 1){
 
                     final String StartAddress,EndAddress;
 
@@ -104,7 +108,7 @@ public class TripPlannerActivity extends ActionBarActivity {
                     intent.putExtra("END_ADDRESS", EndAddress); // Passing EndAddress to next activity
 
                     startActivity(intent);
-                }
+                //}
             }
         });
 
@@ -180,14 +184,15 @@ public class TripPlannerActivity extends ActionBarActivity {
 
                                 // Getting Distance Object
 
-                                JSONObject distance = ((JSONObject)jSteps.get(j)).getJSONObject(TAG_DISTANCE);
-                                String distance_text = distance.getString(TAG_DISTANCE_TEXT);
-                                String distance_value = distance.getString(TAG_DISTANCE_VALUE);
-
                                 HashMap<String, String> singleDirection = new HashMap<String, String>();
 
+                                JSONObject distance = ((JSONObject)jSteps.get(j)).getJSONObject(TAG_DISTANCE);
+                                String distance_text = distance.getString(TAG_DISTANCE_TEXT);
                                 singleDirection.put(TAG_DISTANCE_TEXT,distance_text);
-                                singleDirection.put(TAG_DISTANCE_VALUE,distance_value);
+
+                                JSONObject duration = ((JSONObject)jSteps.get(j)).getJSONObject(TAG_DURATION);
+                                String duration_text = duration.getString(TAG_DURATION_TEXT);
+                                singleDirection.put(TAG_DURATION_TEXT,duration_text);
 
                                 directionsList.add(singleDirection);
 
@@ -215,15 +220,26 @@ public class TripPlannerActivity extends ActionBarActivity {
              * Updating parsed JSON data into ListView
              * */
 
+            list = (ListView)findViewById(R.id.list);
 
-            ListView list = (ListView)findViewById(android.R.id.list);
+            String[] items = new String[] {"Item 1", "Item 2", "Item 3"};
+            String[] items2 = new String[] {"Item 1", "Item 2", "Item 3"};
 
-             ListAdapter adapter = new SimpleAdapter(
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<String>(TripPlannerActivity.this, R.layout.direction_list_item,R.id.text, items);
+
+            ArrayAdapter<String> adapter2 =
+                    new ArrayAdapter<String>(TripPlannerActivity.this, R.layout.direction_list_item,R.id.value, items2);
+
+            ListAdapter adapter3 = new SimpleAdapter(
                     TripPlannerActivity.this, directionsList, R.layout.direction_list_item,
                     new String[] { TAG_DISTANCE_TEXT, TAG_DISTANCE_VALUE},
                     new int[] { R.id.text, R.id.value });
 
-             list.setAdapter(adapter);
+            list.setAdapter(adapter);
+            list.setAdapter(adapter2);
+            list.setAdapter(adapter3);
+
 
 
         }
