@@ -45,7 +45,7 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
 
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        String child = (String) getChild(groupPosition, childPosition);
+        final String child = (String) getChild(groupPosition, childPosition);
         LayoutInflater inflater = context.getLayoutInflater();
         TextView item;
 
@@ -66,14 +66,13 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
 
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setMessage("Remove this favorite?");
+                    builder.setMessage("Remove stop \"" + child + "\" from favorites?");
                     builder.setCancelable(false);
                     builder.setPositiveButton("Yes",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     List<String> child =
                                             mapping.get(groups.get(groupPosition));
-                                    //DELETE FROM FAVORITES HERE. DEF NEED FAVORITES MANAGER
                                     FavoritesManager.deleteFavoriteStop(child.get(childPosition), context);
                                     child.remove(childPosition);
                                     notifyDataSetChanged();
@@ -103,14 +102,13 @@ public class FavoritesListAdapter extends BaseExpandableListAdapter {
 
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setMessage("Remove this favorite?");
+                    builder.setMessage("Remove trip \"" + child.substring(0, 10) + "...\" from favorites?" );
                     builder.setCancelable(false);
                     builder.setPositiveButton("Yes",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     List<String> childlist = mapping.get(groups.get(groupPosition));
                                     String child = childlist.get(childPosition);
-                                    //DELETE FROM FAVORITES HERE. DEF NEED FAVORITES MANAGER
                                     FavoritesManager.deleteFavoriteTrip(FavoritesManager.trip_descriptions.get(child), context);
                                     childlist.remove(childPosition);
                                     notifyDataSetChanged();

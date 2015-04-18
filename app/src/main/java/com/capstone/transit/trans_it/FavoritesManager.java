@@ -52,13 +52,20 @@ public final class FavoritesManager {
         return trip_descriptions.containsKey(name);
     }
 
-    public static void deleteFavoriteTrip(Trip trip, Context ctx) {
-        //CANNOT REALLY DELETE RIGHT NOW.
+    public static Trip getTrip (String name) {
+        return trip_descriptions.get(name);
+    }
+
+    public static void deleteFavoriteTrip(String name, Context ctx) {
+        deleteFavoriteTrip(getTrip(name), ctx);
+    }
+
+
+        public static void deleteFavoriteTrip(Trip trip, Context ctx) {
         trip_set.remove(trip);
         trip_descriptions.remove(trip.description);
         trip_list_updated = true;
         saveFavorites(ctx);
-
     }
 
     public static void addFavoriteStop(String stop_code, Context ctx) {

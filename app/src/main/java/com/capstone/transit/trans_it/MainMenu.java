@@ -12,11 +12,13 @@ import android.widget.ImageButton;
 public class MainMenu extends ActionBarActivity {
 
     // Setting up button references
-   private ImageButton Settings;
-   private ImageButton Map;
-   private ImageButton StopList;
-   private ImageButton TripPlanner;
-   private ImageButton Favorites;
+    private ImageButton Settings;
+    private ImageButton Map;
+    private ImageButton StopList;
+    private ImageButton TripPlanner;
+    private ImageButton Favorites;
+    private ImageButton RouteList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,7 @@ public class MainMenu extends ActionBarActivity {
         StopList = (ImageButton) findViewById(R.id.StopMonitorA);
         TripPlanner = (ImageButton) findViewById(R.id.TripPlannerA);
         Favorites = (ImageButton) findViewById(R.id.FavoritesA);
+        RouteList = (ImageButton) findViewById(R.id.RouteListA);
 
         Settings.setOnClickListener(new View.OnClickListener() {
 
@@ -81,6 +84,15 @@ public class MainMenu extends ActionBarActivity {
                     Favorites.setImageResource(R.drawable.favouritespressed);
             }
         });
+
+        RouteList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent("com.capstone.transit.trans_it.RouteList"));
+                if(RouteList.isPressed())
+                    RouteList.setImageResource(R.drawable.routelistpressed);
+            }
+        });
     }
 
     public void onResume()
@@ -90,6 +102,7 @@ public class MainMenu extends ActionBarActivity {
         Settings.setImageResource(R.drawable.settings);
         StopList.setImageResource(R.drawable.stopmonitor);
         Favorites.setImageResource(R.drawable.favourites);
+        RouteList.setImageResource(R.drawable.routelist);
     }
 
     @Override
