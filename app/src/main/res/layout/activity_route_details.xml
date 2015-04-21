@@ -10,17 +10,18 @@
     <TableLayout
         android:id="@+id/header_table"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:stretchColumns="*">
+        android:layout_width="match_parent">
     </TableLayout>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_table"
+        android:layout_above="@+id/dayoftheweek">
         <TableLayout
             android:id="@+id/content_table"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:stretchColumns="*">
+            android:layout_width="match_parent">
         </TableLayout>
     </ScrollView>
 
@@ -33,29 +34,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/left"
         android:background="@drawable/left"
-        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/centre"
         android:layout_toLeftOf="@+id/centre"
-        android:layout_toStartOf="@+id/centre"
-        android:layout_marginRight="10dp"/>
+        android:layout_toStartOf="@+id/centre" />
 
     <!-- TODO(NICK): Change these to image views for scalability? -->
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/centre"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/centre"/>
+        android:background="@drawable/centre"
+        android:layout_above="@+id/button2"
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/right"
         android:background="@drawable/right"
-        android:layout_alignTop="@+id/centre"
+        android:layout_above="@+id/button2"
         android:layout_toRightOf="@+id/centre"
-        android:layout_toEndOf="@+id/centre"
-        android:layout_marginLeft="10dp"/>
+        android:layout_toEndOf="@+id/centre" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -88,5 +87,19 @@
         android:layout_toEndOf="@+id/dayoftheweek"
         android:src="@drawable/right"
         android:layout_alignTop="@+id/dayoftheweek"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30sp"
+        android:textSize="15sp"
+        android:text="Show On Map"
+        android:background="@drawable/button"
+        android:id="@+id/button2"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:layout_alignLeft="@+id/left"
+        android:layout_alignRight="@+id/right"/>
+
 
 </RelativeLayout>
