@@ -20,10 +20,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
 
 
 public class RouteDetails extends ActionBarActivity {
@@ -49,26 +52,52 @@ public class RouteDetails extends ActionBarActivity {
 
         routeName = getIntent().getStringExtra("EXTRA_NAME");
         routeID = getIntent().getStringExtra("EXTRA_ROUTE_ID");
+        final String TAG = "ME TALKING";
 
+
+        //DAYS OF THE WEEK ====================================================================================
         Calendar c = Calendar.getInstance();
-        currentDayString = c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.CANADA);
-
-        Map<String, Integer> dayToNum = c.getDisplayNames(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.CANADA);
-        dayToNum.put("Holiday", 0);
-        final Map<Integer, String> numToDay = new HashMap<>();
-        for(Map.Entry<String, Integer> entry : dayToNum.entrySet()){
-            numToDay.put(entry.getValue(), entry.getKey());
+        currentDayInt = c.get(Calendar.DAY_OF_WEEK);
+        //Translate into the schedule that we use.
+        switch(currentDayInt) {
+            case Calendar.SUNDAY:
+                currentDayInt = 0;
+                break;
+            case Calendar.SATURDAY:
+                currentDayInt = 1;
+                break;
+            default:
+                currentDayInt = 2;
+                break;
         }
-        dayTextView.setText(currentDayString);
 
-        currentDayInt = dayToNum.get(currentDayString);
+
+
+
+        /*
+                3_merged_965559 SUNDAY
+                2_merged_965560 SATURDAY
+                1_merged_965558 WEEKDAY
+        */
+
+        HashMap<Integer, String> numToServiceID = new HashMap<>();
+        numToServiceID.put(0, "3_merged_965559");
+        numToServiceID.put(1, "2_merged_965560");
+        numToServiceID.put(2, "1_merged_965558");
+
+        final HashMap<Integer, String> numToDay = new HashMap<>();
+        numToDay.put(0, "Sunday/Holiday");
+        numToDay.put(1, "Saturday");
+        numToDay.put(2, "Weekday");
+
+        currentDayString = numToDay.get(currentDayInt);
+        dayTextView.setText(currentDayString);
 
         previousDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentDayInt -= 1;
-                currentDayInt = (currentDayInt + 8) % 8;
-                Log.d("ME TALKING: ", Integer.toString(currentDayInt));
+                currentDayInt = (currentDayInt + 3) % 3;
                 currentDayString = numToDay.get(currentDayInt);
                 dayTextView.setText(currentDayString);
             }
@@ -78,13 +107,13 @@ public class RouteDetails extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 currentDayInt += 1;
-                currentDayInt = currentDayInt % 8;
+                currentDayInt = currentDayInt % 3;
                 currentDayString = numToDay.get(currentDayInt);
                 dayTextView.setText(currentDayString);
             }
         });
 
-        //Make table that can scroll while keeping column headers visible.
+        //Make table that can scroll while keeping column headers visible.=======================
         TableLayout headerTable = (TableLayout) findViewById(R.id.header_table);
         headerTable.setColumnStretchable(0, true);
         headerTable.setColumnShrinkable(1, true);
@@ -97,36 +126,136 @@ public class RouteDetails extends ActionBarActivity {
         contentTable.setColumnShrinkable(1, true);
         contentTable.setColumnShrinkable(2, true);
 
-        //populate table
-        //LOAD LIST OF ROUTES
+        //LOAD ROUTE INFORMATION.
         String triptxt = "trips.txt";
-        String stopstxt = "stops.txt";
+        String stopstxt = "stop_times.txt";
+        String stopnamestxt = "stops.txt";
 
+        HashMap<String, List>   serviceIdToTripID     = new HashMap<>();
+        HashMap<String, List>   serviceIdToBlockID    = new HashMap<>();
+        HashSet<String>         blockIDs              = new HashSet<>();
+        HashMap<String, List>   blockIDToTripID       = new HashMap<>();
+        HashMap<String, List>   tripIDToStop          = new HashMap<>();
+        HashMap<String, String> stopNames           = new HashMap();
+
+
+        for (String i : numToServiceID.values() ) {
+            serviceIdToTripID.put(i, new ArrayList<String>());
+        }
+        for (String i : blockIDs) {
+            blockIDToTripID.put(i, new ArrayList<String>());
+        }
+
+        for (String i : numToServiceID.values() ) {
+            serviceIdToBlockID.put(i, new ArrayList<String>());
+        }
+
+
+        //OH MY GOD THIS IS TERRIBLE.
         try {
             AssetManager assetManager = getAssets();
             InputStream fis = assetManager.open(triptxt);
             InputStream fis2 = assetManager.open(stopstxt);
+            InputStream fis3 = assetManager.open(stopnamestxt);
             BufferedReader tripReader = new BufferedReader(new InputStreamReader(fis));
             BufferedReader stopReader = new BufferedReader(new InputStreamReader(fis2));
+            BufferedReader stopNamesReader = new BufferedReader(new InputStreamReader(fis3));
             String splitLine[];
-            String innerSplitLine[];
             tripReader.readLine();
             stopReader.readLine();
+            stopNamesReader.readLine();
 
+
+            //TRIPS.TXT
+            //route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,block_id,shape_id,wheelchair_boarding,bikes_allowed
+
+            //STOPS_TIMES.TXT
+            //trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled
+
+            //STOPS.TXT
+            //stop_lat,wheelchair_boarding,stop_code,stop_lon,stop_id,stop_url,parent_station,stop_desc,stop_name,location_type,zone_id
+
+
+            //Get all trips associated with a route.
+            //Fills:
+            //blockIDs
+            //serviceIDToTripID
+            //blockIDToTripID
             for (String line; (line = tripReader.readLine()) != null; ) {
-                // process the line.
+                // process the line in TRIPS.
                 splitLine = line.split(",");
                 if (routeID.equals(splitLine[0])) {
-                    
+                    //This now contains a set with lists of all the trips associated with the picked route, grouped by day
+                    serviceIdToTripID.get(splitLine[1]).add(splitLine[2]);
+                    blockIDs.add(splitLine[6]);
+                    try {
+                        blockIDToTripID.get(splitLine[6]).add(splitLine[2]);
+                    } catch (NullPointerException e) {
+                        blockIDToTripID.put(splitLine[6], new ArrayList());
+                        blockIDToTripID.get(splitLine[6]).add(splitLine[2]);
+                    }
                 }
             }
 
+            //Get all stops associated with a trip.
+            List<String> tripIDs = serviceIdToTripID.get(numToServiceID.get(currentDayInt));
+            for (String line; (line = stopReader.readLine()) != null; ) {
+                // process the line in STOPS.
+                splitLine = line.split(",");
+
+                if (tripIDs.contains(splitLine[0])) {
+
+                    //TripID -> StopID,Time,sequenceNumber
+                    try {
+                        tripIDToStop.get(splitLine[0]).add(new Stop(splitLine[3], splitLine[1], splitLine[4]));
+                    } catch (NullPointerException e) {
+                        tripIDToStop.put(splitLine[0], new ArrayList<Stop>());
+                        tripIDToStop.get(splitLine[0]).add(new Stop(splitLine[3], splitLine[1], splitLine[4]));
+                    }
+
+                }
+            }
+
+            for (String line; (line = stopNamesReader.readLine()) != null; ) {
+                splitLine = line.split(",");
+                stopNames.put(splitLine[4], splitLine[8]);
+            }
+
             fis.close();
+            fis2.close();
+            fis3.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        //SHOULD HAVE ALL THE INFO IN THE WORLD NOW.
+        /*
+        WE HAVE:
+
+        numToServiceID
+        serviceIdToTripID
+        serviceIdToBlockID
+        blockIDs
+        blockIDToTripID
+        tripIDToStop
+        stopNames
+
+         */
+
+        //Print it out to test:
+        //FOR TESTING PURPOSES ONLY. DELETE LATER.
+        //print Route ID
+        Log.d(TAG, "Route ID: " + routeID);
+        //Print all trips associated with that route?
+        int count = 1;
+        Iterator<String> iterator = blockIDs.iterator();
+        while (iterator.hasNext()) {
+            Log.d(Integer.toString(count), iterator.next());
+            count++;
+        }
+        //populate table
 
     }
 
@@ -203,4 +332,42 @@ public class RouteDetails extends ActionBarActivity {
 
         return table;
     }
+
 }
+
+
+//STOPS_TIMES.TXT
+//trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled
+//3, 1, 4
+class Stop implements Comparable<Stop> {
+    private String stopID;
+    private String arrivalTime;
+    private String sequenceNumber;
+
+    public Stop(String stopID, String arrivalTime, String sequenceNumber) {
+        this.arrivalTime = arrivalTime;
+        this.sequenceNumber = sequenceNumber;
+        this.stopID = stopID;
+    }
+
+    public String getStopID() {
+        return stopID;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public String getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public int compareTo(Stop stop2) {
+        return stopID.compareTo(stop2.getStopID());
+    }
+}
+
+/*
+TODO(NICK):
+move the loading business to a separate thread like matt did with stop list.
+ */
