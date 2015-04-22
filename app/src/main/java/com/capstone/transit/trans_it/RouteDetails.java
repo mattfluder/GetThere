@@ -1,6 +1,7 @@
 package com.capstone.transit.trans_it;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -46,6 +48,7 @@ public class RouteDetails extends ActionBarActivity {
         dayTextView = (TextView)findViewById(R.id.dayoftheweek);
         previousDay = (ImageView) findViewById(R.id.previousDay);
         nextDay = (ImageView) findViewById(R.id.nextDay);
+        Button showOnMap = (Button) findViewById(R.id.showOnMap);
 
         routeName = getIntent().getStringExtra("EXTRA_NAME");
         routeID = getIntent().getStringExtra("EXTRA_ROUTE_ID");
@@ -81,6 +84,15 @@ public class RouteDetails extends ActionBarActivity {
                 currentDayInt = currentDayInt % 8;
                 currentDayString = numToDay.get(currentDayInt);
                 dayTextView.setText(currentDayString);
+            }
+        });
+
+        showOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent("com.capstone.transit.trans_it.RouteMap");
+                nextActivity.putExtra("EXTRA_ROUTE_ID", routeID);
+                startActivity(nextActivity);
             }
         });
 

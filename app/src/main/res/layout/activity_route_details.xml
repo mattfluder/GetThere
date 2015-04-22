@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/centre"
         android:background="@drawable/centre"
-        android:layout_above="@+id/button2"
+        android:layout_above="@+id/showOnMap"
         android:layout_centerHorizontal="true" />
 
     <ImageButton
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/right"
         android:background="@drawable/right"
-        android:layout_above="@+id/button2"
+        android:layout_above="@+id/showOnMap"
         android:layout_toRightOf="@+id/centre"
         android:layout_toEndOf="@+id/centre" />
 
@@ -92,9 +92,9 @@
         android:layout_width="wrap_content"
         android:layout_height="30sp"
         android:textSize="15sp"
-        android:text="Show On Map"
+        android:text="Show Route On Map"
         android:background="@drawable/button"
-        android:id="@+id/button2"
+        android:id="@+id/showOnMap"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textColor="#FFFFFF"

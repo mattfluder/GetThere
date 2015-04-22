@@ -15,5 +15,6 @@
     <string name="title_activity_favorites">FavoritesActivity</string>
     <string name="title_activity_route_list">RouteList</string>
     <string name="title_activity_route_details">RouteDetails</string>
+    <string name="title_activity_route_map">RouteMap</string>
 
 </resources>
