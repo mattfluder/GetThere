@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:text="Distance"
         android:id="@+id/distanceText"
-        android:paddingRight="5dp"/>
+        android:paddingRight="5dp"
+        android:textColor="#000000"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,7 +21,8 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,6 +33,7 @@
         android:paddingLeft="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:textColor="#000000"/>
 
 </RelativeLayout>
