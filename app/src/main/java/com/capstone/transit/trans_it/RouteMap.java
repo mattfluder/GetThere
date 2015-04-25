@@ -1,8 +1,10 @@
 package com.capstone.transit.trans_it;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -11,18 +13,30 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class RouteMap extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private Intent positionsServiceIntent;
+    private String routeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_map);
         setUpMapIfNeeded();
+        routeID = getIntent().getStringExtra("EXTRA_ROUTE_ID");
+        positionsServiceIntent = new Intent(RouteMap.this,RefreshPositionsService.class);
+        positionsServiceIntent.putExtra("EXTRA_ROUTE_ID", routeID);
+        startService(positionsServiceIntent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        stopService(positionsServiceIntent);
     }
 
     /**
@@ -61,6 +75,6 @@ public class RouteMap extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.2500, -79.919501), 13.0f));
     }
 }
