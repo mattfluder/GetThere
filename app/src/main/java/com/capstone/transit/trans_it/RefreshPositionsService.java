@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class RefreshPositionsService extends IntentService {
@@ -25,6 +26,8 @@ public class RefreshPositionsService extends IntentService {
         super("RefreshPositionsService");
     }
     private String routeID;
+    private ArrayList<Integer> latitudeList;
+    private ArrayList<Integer> longitudeList;
     @Override
     protected void onHandleIntent(Intent intent) {
         int error = FetchPositionsFile();
@@ -38,6 +41,8 @@ public class RefreshPositionsService extends IntentService {
         else {
             resultData.putBoolean("Errors", true);
         }
+        resultData.putIntegerArrayList("LatitudeList", latitudeList);
+        resultData.putIntegerArrayList("LongitudeList", longitudeList);
         receiver.send(error,resultData);
         System.out.println("Sent Results");
     }
@@ -125,7 +130,9 @@ public class RefreshPositionsService extends IntentService {
         catch (Exception e){
             e.printStackTrace();
         }
-
+        latitudeList = new ArrayList<>();
+        longitudeList = new ArrayList<>();
+        int tempLat, tempLong;
         if (realData != null){
             System.out.println("Data not null");
             for (FeedEntity entity : realData.getEntityList()){
@@ -137,7 +144,11 @@ public class RefreshPositionsService extends IntentService {
                 latitude = vehiclePosition.getPosition().getLatitude();
                 longitude = vehiclePosition.getPosition().getLongitude();
                 vehicleLabel = vehiclePosition.getVehicle().getLabel();
-                System.out.println(latitude + ", " + longitude+ ", " + vehicleLabel);
+                tempLat = (int) (latitude*10000);
+                tempLong = (int) (longitude *100000);
+                System.out.println(tempLat+ ", " + tempLong+ ", " + vehicleLabel);
+                latitudeList.add((int)(latitude*100000));
+                longitudeList.add((int) (longitude*100000));
             }
         }
     }
