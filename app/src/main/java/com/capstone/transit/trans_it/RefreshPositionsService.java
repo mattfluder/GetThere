@@ -12,16 +12,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- Gets the real time GTFS_TripUpdates file from the City of Hamilton OpenData server
- returns:
- 0 if successful
- 1 if URL error
- 2 if urlConnection Error
- 3 if BufferedInput Stream Error
- 4 if Writing to File error
- 5 if Close Stream Error
- */
+
 public class RefreshPositionsService extends IntentService {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -31,9 +22,32 @@ public class RefreshPositionsService extends IntentService {
         super("RefreshPositionsService");
     }
     private int routeID;
-    private int errors = 0;
     @Override
     protected void onHandleIntent(Intent intent) {
+        int error = FetchPositionsFile();
+        ResultReceiver receiver = intent.getParcelableExtra("EXTRA_RECEIVER");
+        Bundle resultData = new Bundle();
+        if (error == 0){
+            resultData.putBoolean("Errors", false);
+        }
+        else {
+            resultData.putBoolean("Errors", true);
+        }
+        receiver.send(error,resultData);
+        System.out.println("Sent Results");
+    }
+
+    /**
+     Gets the real time GTFS_VehiclePositions file from the City of Hamilton OpenData server
+     returns:
+     0 if successful
+     1 if URL error
+     2 if urlConnection Error
+     3 if BufferedInput Stream Error
+     4 if Writing to File error
+     5 if Close Stream Error
+     */
+    private int FetchPositionsFile(){
         InputStream is = null;
         HttpURLConnection urlConnection = null;
         FileOutputStream fileStream = null;
@@ -43,9 +57,7 @@ public class RefreshPositionsService extends IntentService {
         }
         catch (Exception e) {
             e.printStackTrace();
-            errors = 1;
-            exitWithError(intent);
-            return;
+            return 1;
         }
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -55,9 +67,7 @@ public class RefreshPositionsService extends IntentService {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Open URL", Toast.LENGTH_SHORT);
             toast.show();*/
             e.printStackTrace();
-            errors = 2;
-            exitWithError(intent);
-            return;
+            return 2;
         }
         try {
             is = new BufferedInputStream(urlConnection.getInputStream());
@@ -67,9 +77,7 @@ public class RefreshPositionsService extends IntentService {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Create Input Stream", Toast.LENGTH_SHORT);
             toast.show();*/
             e.printStackTrace();
-            errors = 3;
-            exitWithError(intent);
-            return;
+            return 3;
         }
         try {
             File GTFR_TripUpdates = new File (getFilesDir(),"GTFS_VehiclePositions.pb");
@@ -84,9 +92,7 @@ public class RefreshPositionsService extends IntentService {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Write File", Toast.LENGTH_SHORT);
             toast.show();*/
             e.printStackTrace();
-            errors = 4;
-            exitWithError(intent);
-            return;
+            return 4;
         }
         finally{
             try {
@@ -98,25 +104,10 @@ public class RefreshPositionsService extends IntentService {
             catch (Exception e) {
                 System.out.print("Failed to Close Streams");
                 e.printStackTrace();
-                errors = 5;
-                exitWithError(intent);
+                return 5;
             }
         }
-        if (errors == 0){
-           /* ResultReceiver receiver = intent.getParcelableExtra("receiver");
-            Bundle resultData = new Bundle();
-            resultData.putBoolean("Errors", false);
-            receiver.send(errors,resultData);
-            System.out.println("Sent Results");*/
-        }
-    }
-
-    private void exitWithError(Intent intent){
-        /*ResultReceiver receiver = intent.getParcelableExtra("receiver");
-        Bundle resultData = new Bundle();
-        resultData.putBoolean("Errors", true);
-        receiver.send(errors,resultData);
-        System.out.println("Sent Results");*/
+        return 0;
     }
 
 }

@@ -1,9 +1,13 @@
 package com.capstone.transit.trans_it;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -33,6 +37,7 @@ public class RouteMap extends FragmentActivity {
         setUpMapIfNeeded();
         positionsServiceIntent = new Intent(getApplicationContext(),RefreshPositionsService.class);
         positionsServiceIntent.putExtra("EXTRA_ROUTE_ID", routeID);
+        positionsServiceIntent.putExtra("EXTRA_RECEIVER", new PositionsReceiver(new Handler()));
         final PendingIntent pendingIntent = PendingIntent.getService(this, 0, positionsServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         long trigger = System.currentTimeMillis();
         int intervalMillis = 1000*60;
@@ -87,5 +92,32 @@ public class RouteMap extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.2500, -79.919501), 13.0f));
+    }
+
+    class PositionsReceiver extends ResultReceiver {
+        public PositionsReceiver(Handler handler){
+            super(handler);
+        }
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            boolean errors;
+            errors= resultData.getBoolean("Errors");
+            if (errors){
+                AlertDialog.Builder builder = new AlertDialog.Builder(RouteMap.this);
+                builder.setTitle("Error getting position data.")
+                        .setMessage("Check data connection?")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do things
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            else {
+            }
+        }
     }
 }
