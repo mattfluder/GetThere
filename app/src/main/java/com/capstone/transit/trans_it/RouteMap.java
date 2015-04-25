@@ -1,5 +1,8 @@
 package com.capstone.transit.trans_it;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -22,21 +25,29 @@ public class RouteMap extends FragmentActivity {
         setContentView(R.layout.activity_route_map);
         setUpMapIfNeeded();
         routeID = getIntent().getStringExtra("EXTRA_ROUTE_ID");
-        positionsServiceIntent = new Intent(RouteMap.this,RefreshPositionsService.class);
-        positionsServiceIntent.putExtra("EXTRA_ROUTE_ID", routeID);
-        startService(positionsServiceIntent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        positionsServiceIntent = new Intent(getApplicationContext(),RefreshPositionsService.class);
+        positionsServiceIntent.putExtra("EXTRA_ROUTE_ID", routeID);
+        final PendingIntent pendingIntent = PendingIntent.getService(this, 0, positionsServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long trigger = System.currentTimeMillis();
+        int intervalMillis = 1000*60;
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC, trigger, intervalMillis,pendingIntent);
     }
 
     @Override
     protected void onPause(){
         super.onPause();
         stopService(positionsServiceIntent);
+        positionsServiceIntent = new Intent(getApplicationContext(),RefreshPositionsService.class);
+        final PendingIntent pendingIntent = PendingIntent.getService(this, 0, positionsServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pendingIntent);
     }
 
     /**

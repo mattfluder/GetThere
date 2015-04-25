@@ -156,7 +156,6 @@
 
         <service
             android:name=".RefreshPositionsService"
-            android:enabled="true"
             android:exported="false" >
         </service>
     </application>
