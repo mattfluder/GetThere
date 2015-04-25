@@ -54,20 +54,4 @@ public class SplashActivity extends Activity{
         }
         return super.onOptionsItemSelected(item);
     }
-    class timesReceiver extends ResultReceiver {
-        public timesReceiver(Handler handler){
-            super(handler);
-        }
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            super.onReceiveResult(resultCode,resultData);
-            System.out.println("Result Received");
-            startActivity(new Intent("com.capstone.transit.trans_it.MAINMENU"));
-            finish();
-        }
-    }
-
-
-
-
 }

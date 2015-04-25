@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
+import com.google.transit.realtime.GtfsRealtime.*;
+
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -21,14 +24,16 @@ public class RefreshPositionsService extends IntentService {
     public RefreshPositionsService() {
         super("RefreshPositionsService");
     }
-    private int routeID;
+    private String routeID;
     @Override
     protected void onHandleIntent(Intent intent) {
         int error = FetchPositionsFile();
         ResultReceiver receiver = intent.getParcelableExtra("EXTRA_RECEIVER");
+        routeID = intent.getStringExtra("EXTRA_ROUTE_ID");
         Bundle resultData = new Bundle();
         if (error == 0){
             resultData.putBoolean("Errors", false);
+            ParseLocations();
         }
         else {
             resultData.putBoolean("Errors", true);
@@ -94,20 +99,47 @@ public class RefreshPositionsService extends IntentService {
             e.printStackTrace();
             return 4;
         }
-        finally{
-            try {
-                if (fileStream != null)
-                    fileStream.close();
-                if (is != null)
-                    is.close();
-            }
-            catch (Exception e) {
-                System.out.print("Failed to Close Streams");
-                e.printStackTrace();
-                return 5;
-            }
+        try {
+            if (fileStream != null)
+                fileStream.close();
+            if (is != null)
+                is.close();
+        }
+        catch (Exception e) {
+            System.out.print("Failed to Close Streams");
+            e.printStackTrace();
+            return 5;
         }
         return 0;
+    }
+
+    private void ParseLocations(){
+        FileInputStream fileIn;
+        FeedMessage realData = null;
+        float latitude, longitude;
+        String vehicleLabel;
+        try {
+            fileIn = openFileInput("GTFS_VehiclePositions.pb");
+            realData = FeedMessage.parseFrom(fileIn); //get data from pb file
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (realData != null){
+            System.out.println("Data not null");
+            for (FeedEntity entity : realData.getEntityList()){
+                if (!entity.hasVehicle()) continue;
+                System.out.println("Has vehicle");
+                VehiclePosition vehiclePosition = entity.getVehicle();
+                if (!vehiclePosition.getTrip().getRouteId().equals(routeID)) continue;
+                System.out.println("Found a trip");
+                latitude = vehiclePosition.getPosition().getLatitude();
+                longitude = vehiclePosition.getPosition().getLongitude();
+                vehicleLabel = vehiclePosition.getVehicle().getLabel();
+                System.out.println(latitude + ", " + longitude+ ", " + vehicleLabel);
+            }
+        }
     }
 
 }
