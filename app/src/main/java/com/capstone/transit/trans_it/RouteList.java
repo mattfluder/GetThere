@@ -83,7 +83,7 @@ public class RouteList extends ActionBarActivity {
         routesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent nextActivity = new Intent("com.capstone.transit.trans_it.RouteDetails");
+                Intent nextActivity = new Intent("com.capstone.transit.trans_it.RouteMap");
                 TextView temp = (TextView) view.findViewById(R.id.lblListHeader);
                 nextActivity.putExtra("EXTRA_NAME", temp.getText().toString());
                 nextActivity.putExtra("EXTRA_ROUTE_ID", routeIDs.get(temp.getText().toString()));

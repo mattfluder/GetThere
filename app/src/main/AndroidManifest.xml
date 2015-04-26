@@ -137,6 +137,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RouteMap"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.capstone.transit.trans_it.RouteMap" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".RefreshPositionsService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
