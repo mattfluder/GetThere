@@ -71,7 +71,7 @@ public class RefreshPositionsService extends IntentService {
         }
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            System.out.println("Opened Connection");
+            //System.out.println("Opened Connection");
         }
         catch(Exception e) {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Open URL", Toast.LENGTH_SHORT);
@@ -81,7 +81,7 @@ public class RefreshPositionsService extends IntentService {
         }
         try {
             is = new BufferedInputStream(urlConnection.getInputStream());
-            System.out.println("Created input stream");
+            //System.out.println("Created input stream");
         }
         catch(Exception e) {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Create Input Stream", Toast.LENGTH_SHORT);
@@ -96,7 +96,7 @@ public class RefreshPositionsService extends IntentService {
             byte[] data = new byte[1024];
             while ((read = is.read(data)) != -1)
                 fileStream.write(data, 0, read);
-            System.out.println("parsed data");
+            //System.out.println("parsed data");
         }
         catch (Exception e) {
             /*toast = Toast.makeText(getApplicationContext(), "Failed to Write File", Toast.LENGTH_SHORT);
@@ -111,7 +111,7 @@ public class RefreshPositionsService extends IntentService {
                 is.close();
         }
         catch (Exception e) {
-            System.out.print("Failed to Close Streams");
+            //System.out.print("Failed to Close Streams");
             e.printStackTrace();
             return 5;
         }
@@ -134,19 +134,19 @@ public class RefreshPositionsService extends IntentService {
         longitudeList = new ArrayList<>();
         int tempLat, tempLong;
         if (realData != null){
-            System.out.println("Data not null");
+            //System.out.println("Data not null");
             for (FeedEntity entity : realData.getEntityList()){
                 if (!entity.hasVehicle()) continue;
-                System.out.println("Has vehicle");
+                //System.out.println("Has vehicle");
                 VehiclePosition vehiclePosition = entity.getVehicle();
                 if (!vehiclePosition.getTrip().getRouteId().equals(routeID)) continue;
-                System.out.println("Found a trip");
+                //System.out.println("Found a trip");
                 latitude = vehiclePosition.getPosition().getLatitude();
                 longitude = vehiclePosition.getPosition().getLongitude();
                 vehicleLabel = vehiclePosition.getVehicle().getLabel();
                 tempLat = (int) (latitude*10000);
                 tempLong = (int) (longitude *100000);
-                System.out.println(tempLat+ ", " + tempLong+ ", " + vehicleLabel);
+                //System.out.println(tempLat+ ", " + tempLong+ ", " + vehicleLabel);
                 latitudeList.add((int)(latitude*100000));
                 longitudeList.add((int) (longitude*100000));
             }

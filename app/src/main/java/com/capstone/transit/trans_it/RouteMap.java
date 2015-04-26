@@ -11,11 +11,13 @@ import android.os.ResultReceiver;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -25,7 +27,7 @@ public class RouteMap extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Intent positionsServiceIntent;
-    private String routeID;
+    private String routeID, routeName;
     private ArrayList<Integer> latitudeList, longitudeList;
     private ArrayList<Marker> busMarkers;
 
@@ -35,6 +37,7 @@ public class RouteMap extends FragmentActivity {
         setContentView(R.layout.activity_route_map);
         setUpMapIfNeeded();
         routeID = getIntent().getStringExtra("EXTRA_ROUTE_ID");
+        routeName = getIntent().getStringExtra("EXTRA_NAME");
     }
 
     @Override
@@ -46,7 +49,7 @@ public class RouteMap extends FragmentActivity {
         positionsServiceIntent.putExtra("EXTRA_RECEIVER", new PositionsReceiver(new Handler()));
         final PendingIntent pendingIntent = PendingIntent.getService(this, 0, positionsServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         long trigger = System.currentTimeMillis();
-        int intervalMillis = 1000*30;
+        int intervalMillis = 1000*60;
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC, trigger, intervalMillis,pendingIntent);
     }
@@ -104,14 +107,20 @@ public class RouteMap extends FragmentActivity {
         mMap.clear();
         float tempLat, tempLongitude;
         busMarkers = new ArrayList<>();
+        busMarkers.clear();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for(int i =0; i < longitudeList.size(); i++){
             tempLat = (latitudeList.get(i)/(float)100000);
             tempLongitude = (longitudeList.get(i)/(float)100000);
             System.out.println("Lat:" + tempLat + "Long:" + tempLongitude);
-            Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(tempLat,tempLongitude)).title("It's a bus").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(tempLat,tempLongitude)).title(routeName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            builder.include(new LatLng(tempLat,tempLongitude));
             busMarkers.add(marker);
             marker.setVisible(true);
         }
+        LatLngBounds bounds = builder.build();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,70);
+        mMap.animateCamera(cu);
     }
 
     class PositionsReceiver extends ResultReceiver {
@@ -140,7 +149,7 @@ public class RouteMap extends FragmentActivity {
                 latitudeList = resultData.getIntegerArrayList("LatitudeList");
                 longitudeList = resultData.getIntegerArrayList("LongitudeList");
                 CreateMarkers();
-                System.out.println("Got Data");
+                //System.out.println("Got Data");
             }
         }
     }
