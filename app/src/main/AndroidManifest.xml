@@ -70,23 +70,16 @@
             android:name=".StopListActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustPan" >
->            
-            <!-- android:screenOrientation="portrait"> -->
-            <!--
-            android:parentActivityName=".MainMenu" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.capstone.transit.trans_it.MainMenu" />
-            -->
+
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.StopListActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".TripPlannerActivity"
-            android:label="@string/app_name" > <!-- android:screenOrientation="portrait"> -->
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPPLANNERACTIVITY" />
 
@@ -140,15 +133,6 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.RouteDetails" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".RouteMap"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="com.capstone.transit.trans_it.RouteMap" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

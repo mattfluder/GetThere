@@ -15,6 +15,7 @@
     <string name="title_activity_favorites">FavoritesActivity</string>
     <string name="title_activity_route_list">RouteList</string>
     <string name="title_activity_route_details">RouteDetails</string>
-    <string name="title_activity_route_map">RouteMap</string>
+    <string name="title_activity_directions_list">DirectionsListActivity</string>
+    <string name="no_daily_forecast_data">There is no data to display</string>
 
 </resources>
