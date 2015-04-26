@@ -1,6 +1,7 @@
 package com.capstone.transit.trans_it;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,10 @@ public class StepAdapter extends BaseAdapter{
         holder.distanceLabel.setText(step.getDistance());
         holder.instructionsLabel.setText(step.getHtmlInstructions());
         holder.durationLabel.setText(step.getDuration());
+        holder.distanceLabel.setTextColor(Color.BLACK);
+        holder.instructionsLabel.setTextColor(Color.BLACK);
+        holder.durationLabel.setTextColor(Color.BLACK);
+
 
         return convertView;
     }
