@@ -35,6 +35,7 @@ import android.os.ResultReceiver;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,8 +58,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -297,8 +300,11 @@ public class StopListActivity extends ActionBarActivity {
                     indexOfRouteId = routesServicing.indexOf(routeID);
                     if (indexOfRouteId != i) continue;
                     System.out.println(routeID);
+
                     for (TripUpdate.StopTimeUpdate stopTime : trip.getStopTimeUpdateList()) {
+
                         if (stopTime.getStopId().equals(stopID)) {
+
                             TripUpdate.StopTimeEvent stopEventArrival = stopTime.getArrival();
                             long unixSeconds = stopEventArrival.getTime();
                             tripID = trip.getTrip().getTripId();
@@ -312,6 +318,7 @@ public class StopListActivity extends ActionBarActivity {
                                     String formattedDate = sdf.format(parsedDate);
                                     currentStopTime = new StopTimes(formattedDate, routeID, tripID, false, stopTime.getArrival().getDelay(), getTripHeader(tripID));
                                     listRouteTimes.add(currentStopTime);
+
                                 }
                                 catch (Exception e){
                                     e.printStackTrace();
@@ -328,6 +335,9 @@ public class StopListActivity extends ActionBarActivity {
                         }
                     }
                 }
+
+                listRouteTimes = sortStopTimes(listRouteTimes);
+
                 System.out.println("Adding to List");
                 if (listRouteTimes.isEmpty())listRouteTimes.add(null);
                 listDataChild.put(listDataHeader.get(i),listRouteTimes);
@@ -336,6 +346,7 @@ public class StopListActivity extends ActionBarActivity {
         }
         findViewById(R.id.stopsLoadingContatiner).setVisibility(View.GONE);
         findViewById(R.id.expandableListView).setVisibility(View.VISIBLE);
+
         listAdapter.notifyDataSetChanged();
     }
 
@@ -426,6 +437,40 @@ public class StopListActivity extends ActionBarActivity {
         }
     }
 
+    private List<StopTimes> sortStopTimes(List<StopTimes> stopTimes){
+
+        StopTimes backupList[] = new StopTimes[stopTimes.size()];
+
+
+
+        for(int i = 0; i < stopTimes.size(); i++){
+
+            backupList[i] = stopTimes.get(i);
+        }
+
+        int N = backupList.length;
+
+        for (int i = 1; i < N; i++) {
+
+            for (int j = i; j > 0; j--) {
+
+                if (backupList[j - 1].getTime().compareTo(backupList[j].getTime()) > 0) {
+
+                    StopTimes temp = backupList[j];
+
+                    backupList[j] = backupList[j-1];
+                    backupList[j-1] = temp;
+
+                } else {
+                    break;
+                }
+            }
+        }
+
+        Log.v("hi", backupList+"");
+
+        return Arrays.asList(backupList);
+    }
 
     //FAVORITES METHODS=======================================
     final View.OnClickListener favButtonClickListener = new View.OnClickListener() {
