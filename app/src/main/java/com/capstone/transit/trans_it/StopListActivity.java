@@ -311,6 +311,9 @@ public class StopListActivity extends ActionBarActivity {
                             SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.CANADA);
                             SimpleDateFormat inFormat = new SimpleDateFormat("HH:MM:ss");
                             Date parsedDate = new Date();
+
+
+
                             if (unixSeconds <1420070400){ //time given is Jan 1st 2015 @ midnight GMT
                                 String arrivalTime= replaceWithStatic(tripID, stopID);
                                 try {
@@ -336,10 +339,15 @@ public class StopListActivity extends ActionBarActivity {
                     }
                 }
 
-                listRouteTimes = sortStopTimes(listRouteTimes);
-
                 System.out.println("Adding to List");
-                if (listRouteTimes.isEmpty())listRouteTimes.add(null);
+
+                if (listRouteTimes.isEmpty()){
+
+                    listRouteTimes.add(null);
+                }else{
+
+                    listRouteTimes = sortStopTimes(listRouteTimes);
+                }
                 listDataChild.put(listDataHeader.get(i),listRouteTimes);
                 System.out.println("Next Loop");
             }
@@ -351,6 +359,7 @@ public class StopListActivity extends ActionBarActivity {
     }
 
     private String replaceWithStatic(String tripID, String stopID){
+
         String line;
         String time = null;
         AssetManager mngr;
@@ -378,6 +387,7 @@ public class StopListActivity extends ActionBarActivity {
             e1.printStackTrace();
         }
         if (time == null) time = "N/A";
+
         return time;
     }
 
@@ -441,8 +451,6 @@ public class StopListActivity extends ActionBarActivity {
 
         StopTimes backupList[] = new StopTimes[stopTimes.size()];
 
-
-
         for(int i = 0; i < stopTimes.size(); i++){
 
             backupList[i] = stopTimes.get(i);
@@ -466,8 +474,6 @@ public class StopListActivity extends ActionBarActivity {
                 }
             }
         }
-
-        Log.v("hi", backupList+"");
 
         return Arrays.asList(backupList);
     }

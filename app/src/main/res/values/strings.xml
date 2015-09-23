@@ -32,7 +32,7 @@
     <string name="title_activity_stop_list">Stop List</string>
     <string name="title_activity_trip_planner">TripPlannerActivity</string>
     <string name="title_activity_trip_display">Map</string>
-    <string name="google_maps_key">AIzaSyDhAnfAN9vLZORcCkvNjyFM4318ZpobqsA</string>
+    <string name="google_maps_key">AIzaSyB-KgZOiv5IwjetRFlF56DLSIgf4nvj0uA</string>
     <string name="title_activity_favorites">FavoritesActivity</string>
     <string name="title_activity_route_list">RouteList</string>
     <string name="title_activity_route_details">RouteDetails</string>

@@ -25,6 +25,7 @@
 package com.capstone.transit.trans_it;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -78,12 +79,30 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
+        TextView staticTxtList = (TextView) convertView.findViewById(R.id.scheduledTimeTextView);
+
         if(childStopTimes == null) {
             txtListChild.setText("Not Available");
-            txtListChild.setTextColor(Color.rgb(204,204,0));
+            txtListChild.setTextColor(Color.rgb(204, 204, 0));
+            staticTxtList.setText("This bus route is not running at this time.");
         }
         else {
+
             txtListChild.setTextColor(childStopTimes.getTimeColor());
+
+            if(childStopTimes.getTimeColor() == -65536){
+
+                staticTxtList.setText("This bus is running late according to it's pre-scheduled time.");
+            }
+            else if ( childStopTimes.getTimeColor() == -16738048){
+
+                staticTxtList.setText("This bus will arrive as scheduled.");
+            }
+            else if ( childStopTimes.getTimeColor() == Color.BLACK){
+
+                staticTxtList.setText("Real time data for this bus route is unavailable.");
+            }
+
             txtListChild.setText(childStopTimes.getToDisplay());
         }
         return convertView;
