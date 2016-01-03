@@ -56,7 +56,8 @@
 
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name" > <!-- android:screenOrientation="portrait"> -->
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"> <!-- android:screenOrientation="portrait"> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +66,8 @@
         </activity>
         <activity
             android:name=".MainMenu"
-            android:label="@string/app_name" > <!-- android:screenOrientation="portrait"> -->
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"> <!-- android:screenOrientation="portrait"> -->
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.MAINMENU" />
 
@@ -74,7 +76,8 @@
         </activity>
         <activity
             android:name=".MapActivity"
-            android:label="@string/app_name" > <!-- android:screenOrientation="portrait"> -->
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"> <!-- android:screenOrientation="portrait"> -->
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.MAPACTIVITY" />
 
@@ -90,7 +93,8 @@
         <activity
             android:name=".StopListActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.StopListActivity" />
@@ -100,7 +104,8 @@
         <activity
             android:name=".TripPlannerActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPPLANNERACTIVITY" />
 
@@ -109,7 +114,8 @@
         </activity>
         <activity
             android:name=".TripDisplayActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.TRIPDISPLAYACTIVITY" />
 
@@ -118,7 +124,8 @@
         </activity>
         <activity
             android:name=".Settings"
-            android:label="@string/app_name" > <!-- android:screenOrientation="portrait"> -->
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"> <!-- android:screenOrientation="portrait"> -->
             <!--
             android:parentActivityName=".MainMenu" >
             <meta-data
@@ -133,7 +140,8 @@
         </activity>
         <activity
             android:name=".FavoritesActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.FavoritesActivity" />
 
@@ -142,13 +150,15 @@
         </activity>
         <activity
             android:name=".RouteList"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.RouteList" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!--
         <activity
             android:name=".RouteDetails"
             android:label="@string/app_name" >
@@ -158,9 +168,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        -->
         <activity
             android:name=".RouteMap"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.capstone.transit.trans_it.RouteMap" />
 

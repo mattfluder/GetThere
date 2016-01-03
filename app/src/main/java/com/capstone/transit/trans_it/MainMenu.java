@@ -53,7 +53,7 @@ public class MainMenu extends ActionBarActivity {
         TripPlanner = (ImageButton) findViewById(R.id.TripPlannerA);
         Favorites = (ImageButton) findViewById(R.id.FavoritesA);
         RouteList = (ImageButton) findViewById(R.id.RouteListA);
-
+/*
         Settings.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -66,6 +66,7 @@ public class MainMenu extends ActionBarActivity {
                 //    settings.setImageResource(R.drawable.settings);
             }
         });
+        */
 
         Map.setOnClickListener(new View.OnClickListener() {
 

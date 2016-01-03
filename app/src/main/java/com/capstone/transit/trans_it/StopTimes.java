@@ -31,7 +31,14 @@ import android.graphics.Color;
  * Created by matt on 18/03/15.
  */
 public class StopTimes {
-    private String time, route, trip, vehicleNumber, toDisplay, tripHeader;
+    private String time;
+    private String route;
+    private String trip;
+    private String vehicleNumber;
+    private String toDisplay;
+    private String tripHeader;
+
+    private String staticTime;
     private int timeColor = Color.BLACK;
     private int delay = 0;
     private boolean isRealtime;
@@ -67,6 +74,14 @@ public class StopTimes {
 
     public String getTime() {
         return time;
+    }
+
+    public String getStaticTime() {
+        return staticTime;
+    }
+
+    public void setStaticTime(String staticTime) {
+        this.staticTime = staticTime;
     }
 
     public String getRoute() {
